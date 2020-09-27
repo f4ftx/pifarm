@@ -54,7 +54,7 @@ Valid options are :\n\
 Without --config argument, program try to open first ~/.pifarmrc.\n\
 If it fail, program will try to open /etc/pifarmrc\n" ;
 
-    printf("%s", usage_str); 
+    printf("%s", usage_str);
 }
 
 /* MAIN PROGRAM ------------------------------------------------------------- */
@@ -110,12 +110,12 @@ int main(int argc, char **argv)
     if ( force_config == 1 )
     {
 #ifdef DBG_CONFIGFILE_PARSE
-        printf("DBG [CONFIG PARSER] - Custom configuration file: %s\n", p_config_path ) ;
+        DEBUG_PRINT("DBG [CONFIG PARSER] - Custom configuration file: %s", p_config_path ) ;
 #endif
         if ( read_config_file(p_config_path) == NULL)
         {
 #ifdef DBG_CONFIGFILE_PARSE
-            printf("DBG [CONFIG PARSER] - Unable to open %s\n", p_config_path ) ;
+            DEBUG_PRINT("DBG [CONFIG PARSER] - Unable to open %s", p_config_path ) ;
 #endif
             exit(1) ;
         }
@@ -128,7 +128,7 @@ int main(int argc, char **argv)
         if (p_home_path == NULL)
         {
 #ifdef DBG_CONFIGFILE_PARSE
-            printf("DBG [CONFIG PARSER] - Unable to expand $HOME\n" ) ;
+            DEBUG_PRINT("DBG [CONFIG PARSER] - Unable to expand $HOME" ) ;
 #endif
         }
         else
@@ -138,13 +138,13 @@ int main(int argc, char **argv)
             if ( read_config_file(p_config_path) == NULL)
             {
 #ifdef DBG_CONFIGFILE_PARSE
-                printf("DBG [CONFIG PARSER] - Unable to open %s\n", p_config_path ) ;
+                DEBUG_PRINT("DBG [CONFIG PARSER] - Unable to open %s", p_config_path ) ;
 #endif
                 sprintf(p_config_path, "/etc/%s", system_config_filename);
                 if ( read_config_file(p_config_path) == NULL)
                 {
 #ifdef DBG_CONFIGFILE_PARSE
-                printf("DBG [CONFIG PARSER] - Unable to open %s\n", p_config_path ) ;
+                DEBUG_PRINT("DBG [CONFIG PARSER] - Unable to open %s", p_config_path ) ;
 #endif
                     return 1 ;
                 }

@@ -497,7 +497,7 @@ void draw_seven_segment_widget(Ez_event *ev, uint8_t*  scale_factor, widget_posi
         default :
             fill_segment(ev, scale_factor, position, segG, dot);
 #ifdef DBG_GUI_WIDGET_LCD
-            printf("DEBUG GUI 7SEG : data out of range : %2x %c\n", data, data);
+            DEBUG_PRINT("DEBUG GUI 7SEG : data out of range : %2x %c", data, data);
 #endif
     } ;
 

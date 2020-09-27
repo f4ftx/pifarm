@@ -52,7 +52,7 @@ void command_light(uint8_t status)
                 gpio_set_pin(&id, &p_ctx->cfg->relay_gpio[id]);
                 p_ctx->light_status = status ;
 #ifdef DBG_LOGIC
-                printf("DBG [LOGIC EVENT]   - Setting p_ctx->light_status to %d\n", p_ctx->light_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->light_status to %d\n", p_ctx->light_status);
 #endif
             }
             else
@@ -60,7 +60,7 @@ void command_light(uint8_t status)
                 gpio_clr_pin(&id, &p_ctx->cfg->relay_gpio[id]);
                 p_ctx->light_status = status ;
 #ifdef DBG_LOGIC
-                printf("DBG [LOGIC EVENT]   - Setting p_ctx->light_status to %d\n", p_ctx->light_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->light_status to %d\n", p_ctx->light_status);
 #endif
             }
         }
@@ -80,7 +80,7 @@ void command_watering(uint8_t status)
                 gpio_set_pin(&id, &p_ctx->cfg->relay_gpio[id]);
                 p_ctx->water_status = status ;
 #ifdef DBG_LOGIC
-                printf("DBG [LOGIC EVENT]   - Setting p_ctx->water_status to %d\n", p_ctx->water_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->water_status to %d\n", p_ctx->water_status);
 #endif
             }
             else
@@ -88,7 +88,7 @@ void command_watering(uint8_t status)
                 gpio_clr_pin(&id, &p_ctx->cfg->relay_gpio[id]);
                 p_ctx->water_status = status ;
 #ifdef DBG_LOGIC
-                printf("DBG [LOGIC EVENT]   - Setting p_ctx->water_status to %d\n", p_ctx->water_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->water_status to %d\n", p_ctx->water_status);
 #endif
             }
         }
@@ -108,7 +108,7 @@ void command_fan(uint8_t status)
                 gpio_set_pin(&id, &p_ctx->cfg->relay_gpio[id]);
                 p_ctx->fan_status = status ;
 #ifdef DBG_LOGIC
-                printf("DBG [LOGIC EVENT]   - Setting p_ctx->fan_status to %d\n", p_ctx->fan_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->fan_status to %d\n", p_ctx->fan_status);
 #endif
             }
             else
@@ -116,7 +116,7 @@ void command_fan(uint8_t status)
                 gpio_clr_pin(&id, &p_ctx->cfg->relay_gpio[id]);
                 p_ctx->fan_status = status ;
 #ifdef DBG_LOGIC
-                printf("DBG [LOGIC EVENT]   - Setting p_ctx->fan_status to %d\n", p_ctx->fan_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->fan_status to %d\n", p_ctx->fan_status);
 #endif
             }
         }
@@ -136,7 +136,7 @@ void command_heating(uint8_t status)
                 gpio_set_pin(&id, &p_ctx->cfg->relay_gpio[id]);
                 p_ctx->heat_status = status ;
 #ifdef DBG_LOGIC
-                printf("DBG [LOGIC EVENT]   - Setting p_ctx->heat_status to %d\n", p_ctx->heat_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->heat_status to %d\n", p_ctx->heat_status);
 #endif
             }
             else
@@ -144,7 +144,7 @@ void command_heating(uint8_t status)
                 gpio_clr_pin(&id, &p_ctx->cfg->relay_gpio[id]);
                 p_ctx->heat_status = status ;
 #ifdef DBG_LOGIC
-                printf("DBG [LOGIC EVENT]   - Setting p_ctx->heat_status to %d\n", p_ctx->heat_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->heat_status to %d\n", p_ctx->heat_status);
 #endif
             }
         }
@@ -210,7 +210,7 @@ void auto_program(void)
         {
             if (watering_task_done_flag == 0)
             {
-                printf("--- PUMP ON ---\n");
+                //printf("--- PUMP ON ---\n");
                 command_watering(ON) ;
                 watering_task_done_flag   = 1 ;
                 watering_duration_timeout = 0 ;
@@ -221,7 +221,7 @@ void auto_program(void)
     if ((p_ctx->water_status == ON) && \
         (watering_duration_timeout == p_ctx->cfg->watering_duration ))
     {
-            printf("--- PUMP OFF ---\n");
+            //printf("--- PUMP OFF ---\n");
             command_watering(OFF) ;
             watering_duration_timeout = 0 ;
     }

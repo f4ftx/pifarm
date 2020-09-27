@@ -101,7 +101,7 @@ void parse_keyword (const char * const key, const char * const val)
         if (strcmp (key, syntax[iter].key) == 0)
         {
 #ifdef DBG_CONFIGFILE_PARSE
-            printf("DBG [CONFIG PARSER] - Key found:%-16s", key) ;
+            DEBUG_PRINT("DBG [CONFIG PARSER] - Key found:%-16s", key) ;
 #endif
             switch (syntax[iter].type) /* key found => extract value */
             {
@@ -111,7 +111,7 @@ void parse_keyword (const char * const key, const char * const val)
                     {
                         memcpy (syntax[iter].data, &ival, sizeof (uint8_t));
 #ifdef DBG_CONFIGFILE_PARSE
-                        printf("Type:UINT8T Value:%d\n", ival) ;
+                        DEBUG_PRINT("                      Type:UINT8T Value:%d", ival) ;
 #endif
                     }
                 break;
@@ -122,7 +122,7 @@ void parse_keyword (const char * const key, const char * const val)
                     {
                         memcpy (syntax[iter].data, &ival, sizeof (uint16_t));
 #ifdef DBG_CONFIGFILE_PARSE
-                        printf("Type:UINT16T Value:%d\n", ival) ;
+                        DEBUG_PRINT("                      Type:UINT16T Value:%d", ival) ;
 #endif
                     }
                 break;
@@ -133,7 +133,7 @@ void parse_keyword (const char * const key, const char * const val)
                     {
                         memcpy (syntax[iter].data, &ival, sizeof (uint32_t));
 #ifdef DBG_CONFIGFILE_PARSE
-                        printf("Type:UINT32T Value:%d\n", ival) ;
+                        DEBUG_PRINT("                      Type:UINT32T Value:%d", ival) ;
 #endif
                     }
                 break;
@@ -141,7 +141,7 @@ void parse_keyword (const char * const key, const char * const val)
                     {
                         strncpy (syntax[iter].data, val, 256 * sizeof(char));
 #ifdef DBG_CONFIGFILE_PARSE
-                        printf("Type:STRING  Value:%s\n", val) ;
+                        DEBUG_PRINT("                      Type:STRING  Value:%s", val) ;
 #endif
                     }
                     break;
@@ -169,13 +169,13 @@ config_t *read_config_file (const char * const config_filename)
 
     /* open config */
 #ifdef DBG_CONFIGFILE_PARSE
-    printf ("DBG [CONFIG PARSER] - Opening file: '%s'\n", config_filename);
+    DEBUG_PRINT ("DBG [CONFIG PARSER] - Opening file: '%s'", config_filename);
 #endif
     config_fd = fopen (config_filename, "r");
     if (config_fd == NULL)
     {
 #ifdef DBG_CONFIGFILE_PARSE
-        printf ("DBG [CONFIG PARSER] - Failed to open file '%s'\n", config_filename);
+        DEBUG_PRINT ("DBG [CONFIG PARSER] - Failed to open file '%s'", config_filename);
 #endif
         perror (config_filename);
         return NULL;
@@ -210,7 +210,7 @@ config_t *read_config_file (const char * const config_filename)
       }
 
 #ifdef DBG_CONFIGFILE_PARSE
-    printf ("DBG [CONFIG PARSER] - Closing file '%s'\n", config_filename);
+    DEBUG_PRINT ("DBG [CONFIG PARSER] - Closing file '%s'", config_filename);
 #endif
     fclose (config_fd);
 

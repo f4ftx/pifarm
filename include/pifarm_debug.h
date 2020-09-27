@@ -23,6 +23,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdint.h>
+#include <stdarg.h>
 
 /* UNCOMMENT TO GET TRACES */
 #ifdef DEBUG
@@ -35,10 +36,12 @@
 #endif
 
 /* DEBUG MACROS */
-#define  DEBUG_DUMP(a,b,c) debug_dump(a, (char *)b, c)
-#define  DEBUG_ASSERT(a)   debug_assert(__PRETTY_FUNCTION__, __FILE__, __LINE__, __STRING(a), a)
+#define DEBUG_PRINT debug_print
+#define DEBUG_DUMP(a,b,c) debug_dump(a, (char *)b, c)
+#define DEBUG_ASSERT(a)   debug_assert(__PRETTY_FUNCTION__, __FILE__, __LINE__, __STRING(a), a)
 
 /* PROTOTYPES */
+void debug_print(char *p_fmt_message, ...);
 void debug_assert(const char *p_fct_name, const char *p_filename, int line, const char *assertion, int res) ;
 void debug_dump(char *p_info, char *p_mem, uint32_t lenght);
 

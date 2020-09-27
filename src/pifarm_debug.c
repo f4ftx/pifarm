@@ -18,11 +18,19 @@
 
 #include "pifarm_debug.h"
 
+void debug_print(char *p_fmt_message, ...)
+{
+    va_list x_args;
+    va_start(x_args, p_fmt_message);
+    vprintf(p_fmt_message, x_args);
+    printf("\n");
+}
+
 void debug_assert(const char *p_fct_name, const char *p_filename, int line, const char *assertion, int res)
 {
    if( res == 1)
    {
-     printf("ASSERTION ERROR file:%s line:%d function:%s() => %s\n", p_filename, line, p_fct_name, assertion);
+     DEBUG_PRINT("ASSERTION ERROR file:%s line:%d function:%s() => %s", p_filename, line, p_fct_name, assertion);
      abort();
    }
 }
@@ -44,7 +52,7 @@ void debug_dump(char *p_info, char *p_mem, uint32_t lenght)
 
    memset(p_dump, ' ', sizeof(t_dump)-2);
 
-   printf("---- %s ----\n", p_info);
+   printf("---- %s ----", p_info);
 
    for(iter = 0; iter < lenght; iter++)
      {
