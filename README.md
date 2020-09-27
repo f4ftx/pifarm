@@ -3,13 +3,13 @@ piFarm is a personal indoor farm with GUI running on raspberry pi, written in C.
 
 ![piFarmscreenshot](https://raw.github.com/f4ftx/pifarm/master/doc/img/piFarmScr.png?raw=true)
 
-#### Features
+### Features
 - very simple GUI interface
 - manual mode or auto program mode
 - temperature / humidity monitoring
 - simply configurable by configuration file
 
-#### Hardware requirements
+### Hardware requirements
 - 1 Raspberry pi computer
 - 1 cheap 16 relay module
 - 1 bme280 i2c module
@@ -25,9 +25,9 @@ regulator connected to the 12V input. In order to make it work with the
 raspberry pi, i had to unsolder the 5V regulator onbord, and power logic via an
 extern 3.3 DC source.
 
-#### Software requirements
+### Software requirements
 - Raspbian distro (with desktop)
 
-#### License
+### License
 Copyright © 2020, Erwan STIPON. Released under the GNU General Public License v3.0.
 
