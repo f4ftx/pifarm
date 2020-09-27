@@ -104,4 +104,6 @@ typedef struct
 
 } context_t ;
 
+void display_help(void) ;
+
 #endif

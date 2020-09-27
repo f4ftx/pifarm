@@ -20,14 +20,11 @@
 
 void debug_assert(const char *p_fct_name, const char *p_filename, int line, const char *assertion, int res)
 {
-#ifdef DBG_ASSERTION
    if( res == 1)
    {
      printf("ASSERTION ERROR file:%s line:%d function:%s() => %s\n", p_filename, line, p_fct_name, assertion);
      abort();
    }
-#endif
-   return ;
 }
 
 void debug_dump(char *p_info, char *p_mem, uint32_t lenght)

@@ -42,7 +42,7 @@ config_t            cfg ;
 static const char   * user_config_filename = ".pifarmrc" ;
 static const char   * system_config_filename = "pifarmrc" ;
 
-void help(void)
+void display_help(void)
 {
     const char  *usage_str=\
 "\nUsage :\n\
@@ -92,14 +92,14 @@ int main(int argc, char **argv)
                 if (optarg == NULL)
                 {
                     printf("Invalid argument for param --config\n\n") ;
-                    help() ; return 1;
+                    display_help() ; return 1;
                 }
                 sprintf(p_config_path, "%s", optarg);
                 force_config = 1 ;
                 break;
             case 'h':
             case '?':
-                help() ; return 0;
+                display_help() ; return 0;
                 break;
             default:
                 break;
@@ -198,7 +198,7 @@ int main(int argc, char **argv)
 
     /* Init GUI */
     if (ez_init() < 0) exit(1);
-    win = ez_window_create (DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, "eFarm", win_on_event);
+    win = ez_window_create (DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT, "piFarm", win_on_event);
     ez_window_dbuf(win, 1);
 
     ez_start_timer(win, REFRESH_INTERVAL) ;
