@@ -1,0 +1,149 @@
+# piFrm onfiguration file
+#
+#   USAGE :
+#
+#       Comments lines (started by '#' char) are ignored.
+#       /!\ Do not start a comment line by a space char
+#
+#       Syntax used by the program is of type key=value
+#       - Do not use space chars
+#       - Values can be strings or integers.
+#       - Integer values may be uint32_t.
+#       - Strings values can not exceed 256 chars.
+#
+
+# AUTO MODE PARAMETERS =========================================================
+PROGRAM_OVERHEAT_TEMPERATURE=30
+PROGRAM_TOO_COLD_TEMPERATEUR=20
+PROGRAM_WIN_TIME_INTERVAL=180
+PROGRAM_WIN_TIME_DURATION=10
+PROGRAM_SUNRISE_TIME=22:30
+PROGRAM_SUNSET_TIME=22:32
+PROGRAM_WATERING_TIME=23:41
+PROGRAM_WATERING_DURATION=20
+
+# GPIO / RELAYS SETTINGS =======================================================
+
+# RELAY ID 00
+RELAY00.GPIO=21
+RELAY00.VOLTAGE=12
+RELAY00.USAGE=LED_DRIVER
+
+# RELAY ID 01
+RELAY01.GPIO=20
+RELAY01.VOLTAGE=12
+RELAY01.USAGE=LED_DRIVER
+
+# RELAY ID 02
+RELAY02.GPIO=16
+RELAY02.VOLTAGE=12
+RELAY02.USAGE=UNUSED
+
+# RELAY ID 03
+RELAY03.GPIO=12
+RELAY03.VOLTAGE=12
+RELAY03.USAGE=UNUSED
+
+# RELAY ID 04
+RELAY04.GPIO=26
+RELAY04.VOLTAGE=12
+RELAY04.USAGE=UNUSED
+
+# RELAY ID 05
+RELAY05.GPIO=19
+RELAY05.VOLTAGE=12
+RELAY05.USAGE=UNUSED
+
+# RELAY ID 06
+RELAY06.GPIO=13
+RELAY06.VOLTAGE=12
+RELAY06.USAGE=UNUSED
+
+# RELAY ID 07
+RELAY07.GPIO=6
+RELAY07.VOLTAGE=240
+RELAY07.USAGE=HEAT_DRIVER
+
+# RELAY ID 08
+RELAY08.GPIO=5
+RELAY08.VOLTAGE=240
+RELAY08.USAGE=HEAT_DRIVER
+
+# RELAY ID 09
+RELAY09.GPIO=23
+RELAY09.VOLTAGE=12
+RELAY09.USAGE=UNUSED
+
+# RELAY ID 10
+RELAY10.GPIO=25
+RELAY10.VOLTAGE=12
+RELAY10.USAGE=PUMP_DRIVER
+
+# RELAY ID 11
+RELAY11.GPIO=24
+RELAY11.VOLTAGE=12
+RELAY11.USAGE=UNUSED
+
+# RELAY ID 12
+RELAY12.GPIO=17
+RELAY12.VOLTAGE=12
+RELAY12.USAGE=FAN_DRIVER
+
+# RELAY ID 13
+RELAY13.GPIO=22
+RELAY13.VOLTAGE=12
+RELAY13.USAGE=FAN_DRIVER
+
+# RELAY ID 14
+RELAY14.GPIO=27
+RELAY14.VOLTAGE=12
+RELAY14.USAGE=LED_DRIVER
+
+# RELAY ID 15
+RELAY15.GPIO=4
+RELAY15.VOLTAGE=12
+RELAY15.USAGE=LED_DRIVER
+
+# Raspberry pi 3b+ board :
+#
+#        +----------------------------+
+#        |()2#################40() +---+
+#        |  1#################39   |USB|
+#        |#D    Pi B+ / Pi 2 +-+   +---+
+#        |#I   \/  +--+      | |   +---+
+#        |#S  ()() |  | CAM  +-+   |USB|
+#        |#P   ()  +--+  #         +---+
+#        |#Y             #        +----+
+#        |        +----+ # +-+    | NET|
+#        |()+---+ |    | # |A|  ()+----+
+#        +--|PWR|-|HDMI|---|V|--------+
+#           +---+ +----+   +-+
+#
+# Raspberry pi 3b+ GPIO pinout :
+#
+#                   Pin1 Pin2
+#               +3V3 [ ] [ ] +5V
+#     SDA1 / GPIO  2 [ ] [ ] +5V
+#     SCL1 / GPIO  3 [ ] [ ] GND
+#            GPIO  4 [ ] [ ] GPIO 14 / TXD0
+#                GND [ ] [ ] GPIO 15 / RXD0
+#            GPIO 17 [ ] [ ] GPIO 18
+#            GPIO 27 [ ] [ ] GND
+#            GPIO 22 [ ] [ ] GPIO 23
+#               +3V3 [ ] [ ] GPIO 24
+#     MOSI / GPIO 10 [ ] [ ] GND
+#     MISO / GPIO  9 [ ] [ ] GPIO 25
+#     SCLK / GPIO 11 [ ] [ ] GPIO  8 / CE0#
+#                GND [ ] [ ] GPIO  7 / CE1#
+#    ID_SD / GPIO  0 [ ] [ ] GPIO  1 / ID_SC
+#            GPIO  5 [ ] [ ] GND
+#            GPIO  6 [ ] [ ] GPIO 12
+#            GPIO 13 [ ] [ ] GND
+#     MISO / GPIO 19 [ ] [ ] GPIO 16 / CE2#
+#            GPIO 26 [ ] [ ] GPIO 20 / MOSI
+#                GND [ ] [ ] GPIO 21 / SCLK
+#                  Pin39 Pin40
+#
+
+
+#EOF
