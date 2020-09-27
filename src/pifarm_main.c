@@ -42,6 +42,21 @@ config_t            cfg ;
 static const char   * user_config_filename = ".pifarmrc" ;
 static const char   * system_config_filename = "pifarmrc" ;
 
+void help(void)
+{
+    const char  *usage_str=\
+"\nUsage :\n\
+tpifarm [option]\n\
+Valid options are :\n\
+\t-h --help               show this message and exit\n\
+\t-c --config=<file>      load custom configuration file\n\
+\n\
+Without --config argument, program try to open first ~/.pifarmrc.\n\
+If it fail, program will try to open /etc/pifarmrc\n" ;
+
+    printf("%s", usage_str); 
+}
+
 /* MAIN PROGRAM ------------------------------------------------------------- */
 int main(int argc, char **argv)
 {
@@ -74,13 +89,17 @@ int main(int argc, char **argv)
         switch (c)
         {
             case 'c':
-                if (optarg == NULL) return 1; /* TODO: display help */
+                if (optarg == NULL)
+                {
+                    printf("Invalid argument for param --config\n\n") ;
+                    help() ; return 1;
+                }
                 sprintf(p_config_path, "%s", optarg);
                 force_config = 1 ;
                 break;
             case 'h':
             case '?':
-                return 0; /* TODO display help*/
+                help() ; return 0;
                 break;
             default:
                 break;
@@ -98,6 +117,7 @@ int main(int argc, char **argv)
 #ifdef DBG_CONFIGFILE_PARSE
             printf("DBG [CONFIG PARSER] - Unable to open %s\n", p_config_path ) ;
 #endif
+            exit(1) ;
         }
 
     }
