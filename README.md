@@ -1,7 +1,7 @@
 # piFarm
 piFarm is a personal indoor farm with GUI running on raspberry pi, written in C.
 
-![piFarmscreenshot](./doc/img/piFarmScr.png?raw=true)
+![piFarmscreenshot](https://raw.github.com/f4ftx/pifarm/master/doc/img/piFarmScr.png?raw=true)
 
 # Features
 - very simple GUI interface
