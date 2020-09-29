@@ -50,17 +50,17 @@ void command_light(uint8_t status)
             if ( status == ON )
             {
                 gpio_set_pin(&id, &p_ctx->cfg->relay_gpio[id]);
-                p_ctx->light_status = status ;
+                p_ctx->actuators->light_status = status ;
 #ifdef DBG_LOGIC
-                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->light_status to %d\n", p_ctx->light_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->actuators->light_status to %d\n", p_ctx->actuators->light_status);
 #endif
             }
             else
             {
                 gpio_clr_pin(&id, &p_ctx->cfg->relay_gpio[id]);
-                p_ctx->light_status = status ;
+                p_ctx->actuators->light_status = status ;
 #ifdef DBG_LOGIC
-                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->light_status to %d\n", p_ctx->light_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->actuators->light_status to %d\n", p_ctx->actuators->light_status);
 #endif
             }
         }
@@ -78,17 +78,17 @@ void command_watering(uint8_t status)
             if ( status == ON )
             {
                 gpio_set_pin(&id, &p_ctx->cfg->relay_gpio[id]);
-                p_ctx->water_status = status ;
+                p_ctx->actuators->water_status = status ;
 #ifdef DBG_LOGIC
-                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->water_status to %d\n", p_ctx->water_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->actuators->water_status to %d\n", p_ctx->actuators->water_status);
 #endif
             }
             else
             {
                 gpio_clr_pin(&id, &p_ctx->cfg->relay_gpio[id]);
-                p_ctx->water_status = status ;
+                p_ctx->actuators->water_status = status ;
 #ifdef DBG_LOGIC
-                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->water_status to %d\n", p_ctx->water_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->actuators->water_status to %d\n", p_ctx->actuators->water_status);
 #endif
             }
         }
@@ -106,17 +106,17 @@ void command_fan(uint8_t status)
             if ( status == ON )
             {
                 gpio_set_pin(&id, &p_ctx->cfg->relay_gpio[id]);
-                p_ctx->fan_status = status ;
+                p_ctx->actuators->fan_status = status ;
 #ifdef DBG_LOGIC
-                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->fan_status to %d\n", p_ctx->fan_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->actuators->fan_status to %d\n", p_ctx->actuators->fan_status);
 #endif
             }
             else
             {
                 gpio_clr_pin(&id, &p_ctx->cfg->relay_gpio[id]);
-                p_ctx->fan_status = status ;
+                p_ctx->actuators->fan_status = status ;
 #ifdef DBG_LOGIC
-                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->fan_status to %d\n", p_ctx->fan_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->actuators->fan_status to %d\n", p_ctx->actuators->fan_status);
 #endif
             }
         }
@@ -134,17 +134,17 @@ void command_heating(uint8_t status)
             if ( status == ON )
             {
                 gpio_set_pin(&id, &p_ctx->cfg->relay_gpio[id]);
-                p_ctx->heat_status = status ;
+                p_ctx->actuators->heat_status = status ;
 #ifdef DBG_LOGIC
-                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->heat_status to %d\n", p_ctx->heat_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->actuators->heat_status to %d\n", p_ctx->actuators->heat_status);
 #endif
             }
             else
             {
                 gpio_clr_pin(&id, &p_ctx->cfg->relay_gpio[id]);
-                p_ctx->heat_status = status ;
+                p_ctx->actuators->heat_status = status ;
 #ifdef DBG_LOGIC
-                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->heat_status to %d\n", p_ctx->heat_status);
+                DEBUG_PRINT("DBG [LOGIC EVENT]   - Setting p_ctx->actuators->heat_status to %d\n", p_ctx->actuators->heat_status);
 #endif
             }
         }
@@ -182,27 +182,42 @@ void auto_program(void)
     strptime(p_ctx->cfg->watering_time, "%H:%M", p_config_watering_tm);
 
     /* light */
-    if ((p_ctx->light_status == OFF) && \
-        (p_now_tm->tm_hour >= p_config_sunrise_tm->tm_hour) && \
-        (p_now_tm->tm_hour <= p_config_sunset_tm->tm_hour) )
+    if ((p_now_tm->tm_hour == p_config_sunrise_tm->tm_hour) && (p_now_tm->tm_min == p_config_sunrise_tm->tm_min) && ( p_now_tm->tm_sec >= 0 ))
     {
-        if (p_now_tm->tm_min >= p_config_sunrise_tm->tm_min)
-        {
-            command_light(ON) ;
-        }
-    }
-    if ((p_ctx->light_status == ON) && \
-        (p_now_tm->tm_hour >= p_config_sunset_tm->tm_hour))
-    {
-        if (p_now_tm->tm_min >= p_config_sunset_tm->tm_min)
-        {
-            command_light(OFF) ;
-        }
+        command_light(ON) ; /* start condition */
     }
 
+    if ((p_now_tm->tm_hour == p_config_sunset_tm->tm_hour ) && (p_now_tm->tm_min == p_config_sunset_tm->tm_min) && ( p_now_tm->tm_sec >= 0 ))
+    {
+        command_light(OFF) ; /* stop condition */
+    }
+
+    if  ((p_now_tm->tm_hour >= p_config_sunrise_tm->tm_hour) && (p_now_tm->tm_hour <= p_config_sunset_tm->tm_hour))
+    {
+        if ((p_now_tm->tm_hour == p_config_sunrise_tm->tm_hour) && (p_now_tm->tm_min > p_config_sunrise_tm->tm_min ))
+        {
+            if (p_ctx->actuators->light_status == OFF) command_light(ON);
+        }
+        else if ((p_now_tm->tm_hour == p_config_sunset_tm->tm_hour) && (p_now_tm->tm_min < p_config_sunset_tm->tm_min ))
+        {
+            if (p_ctx->actuators->light_status == OFF) command_light(ON);
+        }
+        else if ((p_now_tm->tm_hour > p_config_sunrise_tm->tm_hour) && (p_now_tm->tm_min > p_config_sunrise_tm->tm_min) )
+        {
+            if (p_ctx->actuators->light_status == OFF) command_light(ON);
+        }
+        else if ((p_now_tm->tm_hour < p_config_sunset_tm->tm_hour) && (p_now_tm->tm_min < p_config_sunrise_tm->tm_min) )
+        {
+            if (p_ctx->actuators->light_status == OFF) command_light(ON);
+        }
+        else
+        {
+            if (p_ctx->actuators->light_status == ON) command_light(OFF);
+        }
+    }
     /* watering */
-    if (p_ctx->water_status == ON) watering_duration_timeout += 1 ;
-    if ((p_ctx->water_status == OFF) && \
+    if (p_ctx->actuators->water_status == ON) watering_duration_timeout += 1 ;
+    if ((p_ctx->actuators->water_status == OFF) && \
         (p_now_tm->tm_hour == p_config_watering_tm->tm_hour) && \
         (watering_task_done_flag == 0) )
     {
@@ -210,7 +225,6 @@ void auto_program(void)
         {
             if (watering_task_done_flag == 0)
             {
-                //printf("--- PUMP ON ---\n");
                 command_watering(ON) ;
                 watering_task_done_flag   = 1 ;
                 watering_duration_timeout = 0 ;
@@ -218,10 +232,9 @@ void auto_program(void)
         }
     }
 
-    if ((p_ctx->water_status == ON) && \
+    if ((p_ctx->actuators->water_status == ON) && \
         (watering_duration_timeout == p_ctx->cfg->watering_duration ))
     {
-            //printf("--- PUMP OFF ---\n");
             command_watering(OFF) ;
             watering_duration_timeout = 0 ;
     }
@@ -243,7 +256,7 @@ void auto_program(void)
     }
 
     /* Heating */
-    if ( p_ctx->temperature < (float)p_ctx->cfg->low_temp_limit)
+    if ( p_ctx->sensors->temperature < (float)p_ctx->cfg->low_temp_limit)
     {
         command_heating(ON) ;
     }
@@ -253,7 +266,7 @@ void auto_program(void)
     }
 
     /* Overheat */
-    if ( p_ctx->temperature > (float)p_ctx->cfg->high_temp_limit)
+    if ( p_ctx->sensors->temperature > (float)p_ctx->cfg->high_temp_limit)
     {
         command_fan(ON) ;
     }

@@ -124,13 +124,13 @@ void win_on_button_press(Ez_event *ev)                /* Mouse button pressed */
             p_ctx->mode = MANUAL ;
             p_ctx->running_status = STATE_STOPPED ;
 #ifdef DBG_LOGIC
-            DEBUG_PRINT("DBG [LOGIC EVENT]   - Growing lights toggle request, previous state p_ctx->light_status %d", p_ctx->light_status);
+            DEBUG_PRINT("DBG [LOGIC EVENT]   - Growing lights toggle request, previous state p_ctx->actuators->light_status %d", p_ctx->actuators->light_status);
 #endif
-            if ( p_ctx->light_status == OFF ) { p_ctx->light_status = ON;} else {p_ctx->light_status = OFF ;}
-            command_function("LED_DRIVER", p_ctx->light_status  );
-            //command_light(p_ctx->light_status);
+            if ( p_ctx->actuators->light_status == OFF ) { p_ctx->actuators->light_status = ON;} else {p_ctx->actuators->light_status = OFF ;}
+            command_function("LED_DRIVER", p_ctx->actuators->light_status  );
+            //command_light(p_ctx->actuators->light_status);
 #ifdef DBG_LOGIC
-            DEBUG_PRINT("DBG [LOGIC EVENT]   - Growing lights toggle request done, p_ctx->light_status %d", p_ctx->light_status);
+            DEBUG_PRINT("DBG [LOGIC EVENT]   - Growing lights toggle request done, p_ctx->actuators->light_status %d", p_ctx->actuators->light_status);
 #endif
         }
 
@@ -140,12 +140,12 @@ void win_on_button_press(Ez_event *ev)                /* Mouse button pressed */
             p_ctx->mode = MANUAL ;
             p_ctx->running_status = STATE_STOPPED ;
 #ifdef DBG_LOGIC
-            DEBUG_PRINT("DBG [LOGIC EVENT]   - Watering toggle request, previous state p_ctx->water_status %d", p_ctx->water_status);
+            DEBUG_PRINT("DBG [LOGIC EVENT]   - Watering toggle request, previous state p_ctx->actuators->water_status %d", p_ctx->actuators->water_status);
 #endif
-            if ( p_ctx->water_status == OFF ) { p_ctx->water_status = ON;} else {p_ctx->water_status = OFF ;}
-            command_function("PUMP_DRIVER", p_ctx->water_status );
+            if ( p_ctx->actuators->water_status == OFF ) { p_ctx->actuators->water_status = ON;} else {p_ctx->actuators->water_status = OFF ;}
+            command_function("PUMP_DRIVER", p_ctx->actuators->water_status );
 #ifdef DBG_LOGIC
-            DEBUG_PRINT("DBG [LOGIC EVENT]   - Watering toggle request done, p_ctx->water_status %d", p_ctx->water_status);
+            DEBUG_PRINT("DBG [LOGIC EVENT]   - Watering toggle request done, p_ctx->actuators->water_status %d", p_ctx->actuators->water_status);
 #endif
         }
 
@@ -155,12 +155,12 @@ void win_on_button_press(Ez_event *ev)                /* Mouse button pressed */
             p_ctx->mode = MANUAL ;
             p_ctx->running_status = STATE_STOPPED ;
 #ifdef DBG_LOGIC
-            DEBUG_PRINT("DBG [LOGIC EVENT]   - Wind toggle request, previous state p_ctx->fan_status %d", p_ctx->fan_status);
+            DEBUG_PRINT("DBG [LOGIC EVENT]   - Wind toggle request, previous state p_ctx->actuators->fan_status %d", p_ctx->actuators->fan_status);
 #endif
-            if ( p_ctx->fan_status == OFF ) { p_ctx->fan_status = ON;} else {p_ctx->fan_status = OFF ;}
-            command_function("FAN_DRIVER", p_ctx->fan_status );
+            if ( p_ctx->actuators->fan_status == OFF ) { p_ctx->actuators->fan_status = ON;} else {p_ctx->actuators->fan_status = OFF ;}
+            command_function("FAN_DRIVER", p_ctx->actuators->fan_status );
 #ifdef DBG_LOGIC
-            DEBUG_PRINT("DBG [LOGIC EVENT]   - Wind toggle request done, p_ctx->fan_status %d", p_ctx->fan_status);
+            DEBUG_PRINT("DBG [LOGIC EVENT]   - Wind toggle request done, p_ctx->actuators->fan_status %d", p_ctx->actuators->fan_status);
 #endif
         }
 
@@ -170,12 +170,12 @@ void win_on_button_press(Ez_event *ev)                /* Mouse button pressed */
             p_ctx->mode = MANUAL ;
             p_ctx->running_status = STATE_STOPPED ;
 #ifdef DBG_LOGIC
-            DEBUG_PRINT("DBG [LOGIC EVENT]   - Heater toggle request, previous state p_ctx->heat_status %d", p_ctx->heat_status);
+            DEBUG_PRINT("DBG [LOGIC EVENT]   - Heater toggle request, previous state p_ctx->actuators->heat_status %d", p_ctx->actuators->heat_status);
 #endif
-            if ( p_ctx->heat_status == OFF ) { p_ctx->heat_status = ON;} else {p_ctx->heat_status = OFF ;}
-            command_function("HEAT_DRIVER",  p_ctx->heat_status);
+            if ( p_ctx->actuators->heat_status == OFF ) { p_ctx->actuators->heat_status = ON;} else {p_ctx->actuators->heat_status = OFF ;}
+            command_function("HEAT_DRIVER",  p_ctx->actuators->heat_status);
 #ifdef DBG_LOGIC
-            DEBUG_PRINT("DBG [LOGIC EVENT]   - Heater toggle request done, p_ctx->heat_status %d", p_ctx->fan_status);
+            DEBUG_PRINT("DBG [LOGIC EVENT]   - Heater toggle request done, p_ctx->actuators->heat_status %d", p_ctx->actuators->fan_status);
 #endif
         }
     }
@@ -327,7 +327,7 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
     p_segment_data = malloc(10 * sizeof(char)) ;
     DEBUG_ASSERT( p_segment_data == NULL);
 
-    float_to_string(p_ctx->temperature, p_segment_data, 2);
+    float_to_string(p_ctx->sensors->temperature, p_segment_data, 2);
     segment_size = strlen(p_segment_data) ;
 
     draw_temperature_widget(
@@ -342,7 +342,7 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
     segment_position.x   = 150 ;
     segment_position.y   = 80 ;
 
-    float_to_string(p_ctx->humidity, p_segment_data, 2);
+    float_to_string(p_ctx->sensors->humidity, p_segment_data, 2);
 
     segment_size = strlen(p_segment_data) ;
 
@@ -358,7 +358,7 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
     segment_position.x   = 10 ;
     segment_position.y   = 150 ;
 
-    float_to_string(p_ctx->pressure, p_segment_data, 0);
+    float_to_string(p_ctx->sensors->pressure, p_segment_data, 0);
 
     segment_size = strlen(p_segment_data) ;
 
@@ -374,7 +374,7 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
     segment_position.x   = 150 ;
     segment_position.y   = 150 ;
 
-    sprintf(p_segment_data, "%4d", (int)p_ctx->altitude) ;
+    sprintf(p_segment_data, "%4d", (int)p_ctx->sensors->altitude) ;
 
     draw_altitude_widget(
         ev,

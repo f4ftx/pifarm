@@ -186,10 +186,10 @@ uint8_t acquire_bme280(void)
     getRawData(&fd, p_raw);
 
     t_fine = getTemperatureCalibration(&cal, &p_raw->temperature);
-    p_ctx->temperature = compensateTemperature(t_fine);                     /* C   */
-    p_ctx->pressure = compensatePressure(p_raw->pressure, &cal, t_fine) / 100; /* hPa */
-    p_ctx->humidity = compensateHumidity(p_raw->humidity, &cal, t_fine);       /* %   */
-    p_ctx->altitude = getAltitude(p_ctx->pressure);                           /* m   */
+    p_ctx->sensors->temperature = compensateTemperature(t_fine);                     /* C   */
+    p_ctx->sensors->pressure = compensatePressure(p_raw->pressure, &cal, t_fine) / 100; /* hPa */
+    p_ctx->sensors->humidity = compensateHumidity(p_raw->humidity, &cal, t_fine);       /* %   */
+    p_ctx->sensors->altitude = getAltitude(p_ctx->sensors->pressure);                           /* m   */
 
     close(fd) ;
     free(p_raw) ;

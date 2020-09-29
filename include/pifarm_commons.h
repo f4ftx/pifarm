@@ -84,24 +84,33 @@ typedef struct
     uint16_t watering_duration           ;
 } config_t ;
 
-
-/* Struct below handle all runtime context  */
 typedef struct
 {
-    config_t      * cfg ;            /* Pointer to configuration */
-    gfx_context_t * gc ;             /* Pointer to graphical context */
-    uint8_t relay_status[RELAY_NB] ; /* Relay[n] enum current relay status  */
     float   temperature            ; /* °C  */
     float   pressure               ; /* hPa */
     float   humidity               ; /* %   */
     float   altitude               ; /* m   */
-    uint8_t mode                   ; /* MANUAL / AUTO / NONE */
+} sensors_t ;
+
+typedef struct
+{
     uint8_t running_status         ; /* OFF / ON */
     uint8_t light_status           ; /* OFF / ON */
     uint8_t water_status           ; /* OFF / ON */
     uint8_t fan_status             ; /* OFF / ON */
     uint8_t heat_status            ; /* OFF / ON */
+} actuators_t ;
 
+/* Struct below handle all runtime context  */
+typedef struct
+{
+    config_t      * cfg            ; /* Pointer to configuration */
+    gfx_context_t * gc             ; /* Pointer to graphical context */
+    sensors_t     * sensors        ;
+    actuators_t   * actuators      ;
+    uint8_t relay_status[RELAY_NB] ; /* Relay[n] enum current relay status  */
+    uint8_t mode                   ; /* MANUAL / AUTO / NONE */
+    uint8_t running_status         ; /* OFF / ON */
 } context_t ;
 
 void display_help(void) ;

@@ -65,6 +65,8 @@ int main(int argc, char **argv)
     gfx_context_t   * p_gc ;          /* Store some gfx context parts */
     uint8_t         relay_id ;        /* Used for relay status init */
     uint8_t         force_config ;    /* Used if configuration is provided as arg */
+    sensors_t       * p_sensors ;
+    actuators_t     * p_actuators;
     char            * p_config_path ; /* Absolute  configuration file path */
     char            * p_home_path ;   /* point to $HOME */
     int             c;                /* Used to store getopt result */
@@ -159,16 +161,24 @@ int main(int argc, char **argv)
     p_gc  = (gfx_context_t *) malloc(sizeof(gfx_context_t)) ;
     DEBUG_ASSERT( p_gc == NULL );
 
+    p_sensors = (sensors_t *) malloc(sizeof(sensors_t));
+    DEBUG_ASSERT( p_sensors == NULL );
+
+    p_actuators = (actuators_t *) malloc(sizeof(actuators_t));
+    DEBUG_ASSERT( p_sensors == NULL );
+
     p_ctx->cfg = &cfg ;
     p_ctx->gc = p_gc ;
+    p_ctx->sensors = p_sensors ;
+    p_ctx->actuators = p_actuators ;
 
     /* status */
-    p_ctx->mode             = NONE ;
-    p_ctx->running_status   = STATE_STOPPED ;
-    p_ctx->light_status     = OFF ;
-    p_ctx->water_status     = OFF ;
-    p_ctx->fan_status       = OFF ;
-    p_ctx->heat_status      = OFF ;
+    p_ctx->mode                       = NONE ;
+    p_ctx->running_status             = STATE_STOPPED ;
+    p_ctx->actuators->light_status    = OFF ;
+    p_ctx->actuators->water_status    = OFF ;
+    p_ctx->actuators->fan_status      = OFF ;
+    p_ctx->actuators->heat_status     = OFF ;
 
     /* click zones */
     click_zone_t cz_btn_play  = { CZ_PLAY } ;
@@ -209,10 +219,14 @@ int main(int argc, char **argv)
 
     /* Memory clean */
     free(p_gc) ;
+    free(p_sensors);
+    free(p_actuators);
     free(p_ctx) ;
     free(p_config_path);
 
     p_gc = NULL ;
+    p_sensors = NULL ;
+    p_actuators = NULL ;
     p_ctx = NULL ;
     p_home_path   = NULL ;
     p_config_path = NULL ;

@@ -1050,11 +1050,11 @@ void draw_light_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
     if ( REFRESH_1HZ > 50 )
     {
-        if (( p_ctx->light_status ) && (p_ctx->mode == MANUAL)) ez_set_color (YELLOW);
-        if (( p_ctx->light_status ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
+        if (( p_ctx->actuators->light_status ) && (p_ctx->mode == MANUAL)) ez_set_color (YELLOW);
+        if (( p_ctx->actuators->light_status ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
     }
 
-    if (p_ctx->light_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if (p_ctx->actuators->light_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
 
     /* rays */
     ez_set_thick(*scale_factor * 2) ;
@@ -1092,11 +1092,11 @@ void draw_light_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
     if ( REFRESH_1HZ > 50 )
     {
-        if ((p_ctx->light_status == ON ) && (p_ctx->mode == MANUAL)) ez_set_color (YELLOW);
-        if ((p_ctx->light_status == ON ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
+        if ((p_ctx->actuators->light_status == ON ) && (p_ctx->mode == MANUAL)) ez_set_color (YELLOW);
+        if ((p_ctx->actuators->light_status == ON ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
     }
 
-    if (p_ctx->light_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if (p_ctx->actuators->light_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
 
     ez_fill_circle(
         ev->win,
@@ -1122,11 +1122,11 @@ void draw_water_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
     if ( REFRESH_1HZ > 50 )
     {
-        if ((p_ctx->water_status == ON ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
-        if ((p_ctx->water_status == ON ) && (p_ctx->mode == MANUAL)) ez_set_color (BLUE);
+        if ((p_ctx->actuators->water_status == ON ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
+        if ((p_ctx->actuators->water_status == ON ) && (p_ctx->mode == MANUAL)) ez_set_color (BLUE);
     }
 
-    if (p_ctx->water_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if (p_ctx->actuators->water_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
 
     /* CLOUD */
     ez_fill_circle(
@@ -1204,11 +1204,11 @@ void draw_fan_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_t
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
     if ( REFRESH_1HZ > 50 )
     {
-        if ((p_ctx->fan_status == ON ) && (p_ctx->mode == MANUAL)) ez_set_color (ORANGE);
-        if ((p_ctx->fan_status == ON ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
+        if ((p_ctx->actuators->fan_status == ON ) && (p_ctx->mode == MANUAL)) ez_set_color (ORANGE);
+        if ((p_ctx->actuators->fan_status == ON ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
     }
 
-    if (p_ctx->fan_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if (p_ctx->actuators->fan_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
 
     ez_set_thick(4 * *scale_factor) ;
     ez_draw_rectangle(
@@ -1273,11 +1273,11 @@ void draw_heat_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
     if ( REFRESH_1HZ > 50 )
     {
-        if ((p_ctx->heat_status == ON ) && (p_ctx->mode == MANUAL)) ez_set_color (RED);
-        if ((p_ctx->heat_status == ON ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
+        if ((p_ctx->actuators->heat_status == ON ) && (p_ctx->mode == MANUAL)) ez_set_color (RED);
+        if ((p_ctx->actuators->heat_status == ON ) && (p_ctx->mode == AUTO))   ez_set_color (GREEN);
     }
 
-    if (p_ctx->heat_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if (p_ctx->actuators->heat_status == OFF) ez_set_color (DEFAULT_FOREGROUND_COLOR);
 
     /* 3 triangles */
     ez_fill_triangle (
