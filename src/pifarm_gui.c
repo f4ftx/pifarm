@@ -22,6 +22,7 @@ extern context_t     *      p_ctx ;
 extern uint8_t              REFRESH_1HZ  ;
 extern uint8_t              REFRESH_10HZ ;
 
+
 void debug_draw_click_zone(Ez_event *ev, uint8_t * scale_factor )
 {
     DEBUG_ASSERT( ev == NULL );
@@ -216,6 +217,7 @@ void win_on_timer_notify(Ez_event *ev)               /* The timer has expired */
     REFRESH_10HZ  +=1 ;
 
     if (( REFRESH_1HZ == 100 ) && ( p_ctx->mode == AUTO )) auto_program();
+    if ( REFRESH_1HZ == 100 ) record_sample();
 
     /* TEST RPH & REFRESH */
     if ( REFRESH_1HZ == 100 ) acquire_bme280();
@@ -296,7 +298,7 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
     static widget_position_t    clock_position ;
     static widget_position_t    controlpanel_position;
     static widget_position_t    relay_position ;
-
+    static widget_position_t    graphs_position ;
 
 #ifdef DBG_GUI_EVENTS
     DEBUG_PRINT ("DBG [GUI EVENTS]    - Expose          win = 0x%x", ez_window_get_id(ev->win));
@@ -399,8 +401,16 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
         ev,
         &relay_position ) ;
 
+    /* GRAPHS WIDGET */
+    /*
+    graphs_position.x = 10 ;
+    graphs_position.y = 10 ;
+
+    draw_graphs_widget(ev, &graphs_position) ;
+
     free(p_segment_data) ;
     p_segment_data = NULL ;
+*/
 
 #ifdef DBG_GUI_CLICK_ZONES
     debug_draw_click_zone(ev, &scale_factor) ;

@@ -22,6 +22,38 @@ extern context_t     *      p_ctx ;
 extern uint8_t              REFRESH_1HZ  ;
 extern uint8_t              REFRESH_10HZ ;
 
+void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
+{
+    DEBUG_ASSERT( ev == NULL );
+    DEBUG_ASSERT( position == NULL );
+
+    static int cmp = 0 ;
+    static int buffer[460] = {} ;
+    uint16_t i ;
+
+    if ( REFRESH_1HZ < 50 )
+    {
+        buffer[cmp] = p_ctx->sensors->humidity ;
+        cmp +=1 ;
+    }
+
+    ez_set_color (BLUE);
+    for(i=0; i<=cmp; i++)
+    {
+        if (buffer[i] != 0 )
+        {
+        ez_draw_line (
+            ev->win,
+            position->x + 10 + i,
+            position->y + 470,
+            position->x + 10 + i ,
+            position->y + (470 - buffer[i]));
+        }
+    }
+    ez_set_color (DEFAULT_BACKGROUND_COLOR);
+
+}
+
 void draw_relays_widget(Ez_event *ev, widget_position_t * position )
 {
     DEBUG_ASSERT( ev == NULL );
@@ -36,8 +68,8 @@ void draw_relays_widget(Ez_event *ev, widget_position_t * position )
         ev->win,
         position->x ,
         position->y ,
-        position->x + 600,
-        position->y + 125 );
+        position->x + 615,
+        position->y + 120 );
 
     /* main frame */
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
@@ -59,7 +91,7 @@ void draw_relays_widget(Ez_event *ev, widget_position_t * position )
     y = position->y + 15 ;
     for (relay=0 ; relay <16 ; relay ++)
     {
-        if ( relay < 8 ) 
+        if ( relay < 8 )
         {
             if (relay != 0) x += 75 ;
             y = position->y + 64;
@@ -603,28 +635,9 @@ void draw_clock_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_t *
     DEBUG_ASSERT( scale_factor == NULL );
     DEBUG_ASSERT( position == NULL );
 
-    /* blink @ 1HZ */
-    //static int cmp = 0 ;
-    //static int blink = 0 ;
     struct timeval time_now;
     struct tm * time_str_tm ;
     char data[3] ;
-
-    /*
-    cmp +=1 ;
-    if (cmp == 99)
-    {
-        if (blink == 1)
-        {
-            blink = 0 ;
-        }
-        else
-        {
-            blink = 1 ;
-        }
-        cmp = 0 ;
-    }
-    */
 
     /* widget background */
     ez_set_color (DEFAULT_BACKGROUND_COLOR);
@@ -632,8 +645,8 @@ void draw_clock_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_t *
         ev->win,
         position->x ,
         position->y ,
-        position->x + *scale_factor * 285,
-        position->y + *scale_factor * 75 );
+        position->x + *scale_factor * 280,
+        position->y + *scale_factor * 65 );
 
     /* main frame */
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
@@ -689,7 +702,7 @@ void draw_temperature_widget(Ez_event *ev, uint8_t * scale_factor, widget_positi
         ev->win,
         position->x ,
         position->y ,
-        position->x + size * 26 + 10 ,
+        position->x + 5 * 26 + 10 ,
         position->y +  38 + 25 );
 
     /* main frame */
@@ -698,7 +711,7 @@ void draw_temperature_widget(Ez_event *ev, uint8_t * scale_factor, widget_positi
         ev->win,
         position->x + 5 ,
         position->y + 5,
-        position->x + 5 + size * 26,
+        position->x + 5 + 5 * 26,
         position->y + 5 + 38 + 15 );
 
     /* desc */
@@ -734,7 +747,7 @@ void draw_humidity_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
         ev->win,
         position->x ,
         position->y ,
-        position->x + size * 26 + 10 ,
+        position->x + 5 * 26 + 10 ,
         position->y +  38 + 25 );
 
     /* main frame */
@@ -743,7 +756,7 @@ void draw_humidity_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
         ev->win,
         position->x + 5 ,
         position->y + 5,
-        position->x + 5 + size * 26,
+        position->x + 5 + 5 * 26,
         position->y + 5 + 38 + 15 );
 
     /* desc */
@@ -778,7 +791,7 @@ void draw_pressure_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
         ev->win,
         position->x ,
         position->y ,
-        position->x + size * 26 + 10 ,
+        position->x + 5 * 26 + 10 ,
         position->y +  38 + 25 );
 
     /* main frame */
@@ -787,7 +800,7 @@ void draw_pressure_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
         ev->win,
         position->x + 5 ,
         position->y + 5,
-        position->x + 5 + (size+1) * 26 ,
+        position->x + 5 + 5 * 26 ,
         position->y + 5 + 38 + 15 );
 
     /* desc */
@@ -823,7 +836,7 @@ void draw_altitude_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
         ev->win,
         position->x ,
         position->y ,
-        position->x + size * 26 + 10 ,
+        position->x + 5 * 26 + 10 ,
         position->y +  38 + 25 );
 
     /* main frame */
@@ -832,7 +845,7 @@ void draw_altitude_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
         ev->win,
         position->x + 5 ,
         position->y + 5,
-        position->x + 5 + (size+1) * 26 ,
+        position->x + 5 + 5 * 26 ,
         position->y + 5 + 38 + 15 );
 
     /* desc */
@@ -906,40 +919,6 @@ void draw_play_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
     status = p_ctx->running_status ;
 
     draw_btn_widget(ev, scale_factor, position, 75, 150) ;
-
-    /*
-    ez_set_color (DEFAULT_BACKGROUND_COLOR);
-    ez_fill_rectangle (
-        ev->win,
-        position->x ,
-        position->y ,
-        position->x + *scale_factor * 150,
-        position->y + *scale_factor * 75 );
-
-    ez_set_color (DEFAULT_FOREGROUND_COLOR);
-    ez_fill_rectangle (
-        ev->win,
-        position->x + *scale_factor * 4 ,
-        position->y + *scale_factor * 4,
-        position->x + *scale_factor * 142,
-        position->y + *scale_factor * 67 );
-
-    ez_set_color (ez_black);
-    ez_fill_rectangle (
-        ev->win,
-        position->x + *scale_factor * 8,
-        position->y + *scale_factor * 8,
-        position->x + *scale_factor * 146,
-        position->y + *scale_factor * 71 );
-
-    ez_set_color (DEFAULT_BACKGROUND_COLOR);
-    ez_fill_rectangle (
-        ev->win,
-        position->x + *scale_factor * 7,
-        position->y + *scale_factor * 7,
-        position->x + *scale_factor * 143,
-        position->y + *scale_factor * 68 );
-    */
 
     /* ICON */
     if (status != STATE_RUNNING)
@@ -1038,7 +1017,6 @@ void draw_stop_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
         position->y + *scale_factor * 50);
 
 }
-
 
 void draw_light_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_t * position )
 {
@@ -1391,7 +1369,7 @@ void draw_controlpanel_widget(Ez_event *ev, uint8_t * scale_factor, widget_posit
         position->x ,
         position->y ,
         position->x + *scale_factor * 320,
-        position->y + *scale_factor * 175 );
+        position->y + *scale_factor * 203 );
 
     /* main frame */
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
@@ -1440,8 +1418,6 @@ void draw_controlpanel_widget(Ez_event *ev, uint8_t * scale_factor, widget_posit
         position->y + *scale_factor * 37 );
     ez_draw_text (ev->win, EZ_TL, position->x + *scale_factor * 112, position->y +23 , "OVERHAT");
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
-
-
 
     /* btn*/
     btn_play_position.x    = position->x + *scale_factor * 10 ;

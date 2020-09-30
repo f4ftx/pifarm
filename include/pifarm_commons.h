@@ -20,6 +20,7 @@
 #define PIFARM_COMMONS_H
 
 #include <stdint.h>
+#include <time.h>
 
 #include "pifarm_debug.h"
 
@@ -71,6 +72,7 @@ typedef struct
 /* Struct below handle all software configuration  */
 typedef struct
 {
+    char     records_file_path[256]      ;
     uint8_t  relay_gpio[RELAY_NB]        ; /* Corresponding gpio pin => relay id */
     uint8_t  relay_voltage[RELAY_NB]     ; /* U */
     char     relay_usage[RELAY_NB][256]  ;
@@ -84,6 +86,7 @@ typedef struct
     uint16_t watering_duration           ;
 } config_t ;
 
+/* sensors status */
 typedef struct
 {
     float   temperature            ; /* °C  */
@@ -92,14 +95,28 @@ typedef struct
     float   altitude               ; /* m   */
 } sensors_t ;
 
+/* actuators status */
 typedef struct
 {
-    uint8_t running_status         ; /* OFF / ON */
     uint8_t light_status           ; /* OFF / ON */
     uint8_t water_status           ; /* OFF / ON */
     uint8_t fan_status             ; /* OFF / ON */
     uint8_t heat_status            ; /* OFF / ON */
 } actuators_t ;
+
+typedef struct
+{
+    struct tm  timestamp   ;
+    uint8_t    mode        ;
+    float      temperature ; /* °C  */
+    float      pressure    ; /* hPa */
+    float      humidity    ; /* %   */
+    float      altitude    ; /* m   */
+    uint8_t    light_status; /* OFF / ON */
+    uint8_t    water_status; /* OFF / ON */
+    uint8_t    fan_status  ; /* OFF / ON */
+    uint8_t    heat_status ; /* OFF / ON */
+} recording_t ;
 
 /* Struct below handle all runtime context  */
 typedef struct

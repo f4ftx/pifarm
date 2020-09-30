@@ -21,6 +21,7 @@
 
 #include "pifarm_commons.h"
 #include "pifarm_debug.h"
+#include "pifarm_recordings.h"
 #include "pifarm_sensors.h"
 #include "pifarm_gpio.h"
 #include "pifarm_logic.h"
@@ -31,8 +32,8 @@
 
 
 /* DEFAULT WINDOWS SIZE */
-#define DEFAULT_WINDOW_WIDTH  1024
-#define DEFAULT_WINDOW_HEIGHT 600
+#define DEFAULT_WINDOW_WIDTH  640
+#define DEFAULT_WINDOW_HEIGHT 480
 
 /* GUI PARAMETERS */
 #define REFRESH_INTERVAL      10   /* 10ms 100Hz */
@@ -56,10 +57,13 @@
 #define CZ_FAN        "fan  ",  475, 140, 530, 195
 #define CZ_HEAT       "heat ",  550, 140, 605, 195
 
-/*  GUI PROTO : RELAYS STATUS WIDGET */
+/* GUI : GRAPHS WIDGET */
+void draw_graphs_widget(Ez_event *ev, widget_position_t * position ) ;
+
+/*  GUI : RELAYS STATUS WIDGET */
 void draw_relays_widget(Ez_event *ev, widget_position_t * position ) ;
 
-/*  GUI PROTO : 7 SEG DISPLAY ( T P H A ) */
+/*  GUI : 7 SEG DISPLAY ( T P H A ) */
 void reverse(char* str, uint8_t len);
 uint16_t intToStr(uint16_t x, char str[], uint8_t d);
 void float_to_string(float n, char* res, uint8_t afterpoint);
@@ -74,7 +78,7 @@ void draw_clock_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_t *
 void draw_pressure_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_t * position, uint8_t size, char * data ) ;
 void draw_humidity_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_t * position, uint8_t size, char * data ) ;
 
-/* GUI PROTO : CONTROL PANEL WIDGET */
+/* GUI CONTROL PANEL WIDGET */
 void draw_btn_widget          (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position, uint8_t height, uint8_t width) ;
 void draw_play_btn_widget     (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
 void draw_pause_btn_widget    (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;

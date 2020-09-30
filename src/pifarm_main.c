@@ -173,12 +173,16 @@ int main(int argc, char **argv)
     p_ctx->actuators = p_actuators ;
 
     /* status */
-    p_ctx->mode                       = NONE ;
-    p_ctx->running_status             = STATE_STOPPED ;
-    p_ctx->actuators->light_status    = OFF ;
-    p_ctx->actuators->water_status    = OFF ;
-    p_ctx->actuators->fan_status      = OFF ;
-    p_ctx->actuators->heat_status     = OFF ;
+    p_ctx->mode                     = NONE ;
+    p_ctx->running_status           = STATE_STOPPED ;
+    p_ctx->actuators->light_status  = OFF ;
+    p_ctx->actuators->water_status  = OFF ;
+    p_ctx->actuators->fan_status    = OFF ;
+    p_ctx->actuators->heat_status   = OFF ;
+    p_ctx->sensors->temperature     = 0.;
+    p_ctx->sensors->humidity        = 0 ;
+    p_ctx->sensors->pressure        = 0 ;
+    p_ctx->sensors->altitude        = 0 ;
 
     /* click zones */
     click_zone_t cz_btn_play  = { CZ_PLAY } ;

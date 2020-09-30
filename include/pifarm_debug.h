@@ -27,12 +27,12 @@
 
 /* UNCOMMENT TO GET TRACES */
 #ifdef DEBUG
-#define DBG_ASSERTION        1
-#define DBG_GUI_EVENTS       1
-#define DBG_GUI_CLICK_ZONES  1
-#define DBG_CONFIGFILE_PARSE 1
-#define DBG_ELECTRONIC       1
-#define DBG_LOGIC            1
+//#define DBG_ASSERTION        1
+//#define DBG_GUI_EVENTS       1
+//#define DBG_GUI_CLICK_ZONES  1
+//#define DBG_CONFIGFILE_PARSE 1
+//#define DBG_ELECTRONIC       1
+//#define DBG_LOGIC            1
 #endif
 
 /* DEBUG MACROS */
