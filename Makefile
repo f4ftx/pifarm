@@ -66,11 +66,11 @@ $(PROGNAME): $(OBJ_CC_LIST) $(OBJ_AS_LIST) $(lib_bcm2835) $(lib_ezdraw)
 
 debug: CFLAGS_DBG = -DDEBUG -O0 -g
 
-debug: all
+debug: clean all
 
 release: CFLAGS_REL = -O3 -mcpu=cortex-a53 -mfpu=neon-fp-armv8 -mfloat-abi=hard -funsafe-math-optimizations
 
-release: all
+release: clean all
 
 clean:
 	rm -f  $(OBJ_DIR)/pifarm*.o

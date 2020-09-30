@@ -854,7 +854,7 @@ void draw_altitude_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
 }
 
 /* CONTROL PANEL WIDGET */
-void draw_btn_widget (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position )
+void draw_btn_widget (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position, uint8_t height, uint8_t width )
 {
     DEBUG_ASSERT( ev == NULL );
     DEBUG_ASSERT( scale_factor == NULL );
@@ -866,32 +866,32 @@ void draw_btn_widget (Ez_event *ev, uint8_t * scale_factor, widget_position_t * 
         ev->win,
         position->x ,
         position->y ,
-        position->x + *scale_factor * 75,
-        position->y + *scale_factor * 75 );
+        position->x + *scale_factor * width,
+        position->y + *scale_factor * height );
 
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
     ez_fill_rectangle (
         ev->win,
         position->x + *scale_factor * 4 ,
         position->y + *scale_factor * 4,
-        position->x + *scale_factor * 67,
-        position->y + *scale_factor * 67 );
+        position->x + *scale_factor * (width - 8),
+        position->y + *scale_factor * (height - 8) );
 
     ez_set_color (ez_black);
     ez_fill_rectangle (
         ev->win,
         position->x + *scale_factor * 8,
         position->y + *scale_factor * 8,
-        position->x + *scale_factor * 71,
-        position->y + *scale_factor * 71 );
+        position->x + *scale_factor * (width - 2),
+        position->y + *scale_factor * (height - 4) );
 
     ez_set_color (DEFAULT_BACKGROUND_COLOR);
     ez_fill_rectangle (
         ev->win,
         position->x + *scale_factor * 7,
         position->y + *scale_factor * 7,
-        position->x + *scale_factor * 68,
-        position->y + *scale_factor * 68 );
+        position->x + *scale_factor * (width - 7),
+        position->y + *scale_factor * (height - 7) );
 
 }
 
@@ -905,7 +905,9 @@ void draw_play_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
 
     status = p_ctx->running_status ;
 
-    /* widget background */
+    draw_btn_widget(ev, scale_factor, position, 75, 150) ;
+
+    /*
     ez_set_color (DEFAULT_BACKGROUND_COLOR);
     ez_fill_rectangle (
         ev->win,
@@ -937,6 +939,7 @@ void draw_play_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
         position->y + *scale_factor * 7,
         position->x + *scale_factor * 143,
         position->y + *scale_factor * 68 );
+    */
 
     /* ICON */
     if (status != STATE_RUNNING)
@@ -973,7 +976,7 @@ void draw_pause_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position
     DEBUG_ASSERT( position == NULL );
 
     /* BTN */
-    draw_btn_widget(ev, scale_factor, position) ;
+    draw_btn_widget(ev, scale_factor, position, 75, 75) ;
 
     /* ICON */
     if (p_ctx->running_status != STATE_PAUSED)
@@ -1015,7 +1018,7 @@ void draw_stop_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
     DEBUG_ASSERT( position == NULL );
 
     /* BTN */
-    draw_btn_widget(ev, scale_factor, position) ;
+    draw_btn_widget(ev, scale_factor, position, 75, 75) ;
 
     /* ICON */
     if (p_ctx-> running_status != STATE_STOPPED)
@@ -1044,7 +1047,7 @@ void draw_light_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position
     DEBUG_ASSERT( position == NULL );
 
     /* BTN */
-    draw_btn_widget(ev, scale_factor, position) ;
+    draw_btn_widget(ev, scale_factor, position, 75, 75) ;
 
     /* ICON */
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
@@ -1116,7 +1119,7 @@ void draw_water_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position
     DEBUG_ASSERT( position == NULL );
 
     /* BTN */
-    draw_btn_widget(ev, scale_factor, position) ;
+    draw_btn_widget(ev, scale_factor, position, 75, 75) ;
 
     /* ICON */
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
@@ -1198,7 +1201,7 @@ void draw_fan_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_t
     DEBUG_ASSERT( position == NULL );
 
     /* BTN */
-    draw_btn_widget(ev, scale_factor, position) ;
+    draw_btn_widget(ev, scale_factor, position, 75, 75) ;
 
     /* ICON */
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
@@ -1267,7 +1270,7 @@ void draw_heat_btn_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
     DEBUG_ASSERT( position == NULL );
 
     /* BTN */
-    draw_btn_widget(ev, scale_factor, position) ;
+    draw_btn_widget(ev, scale_factor, position, 75, 75) ;
 
     /* ICON */
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
@@ -1422,10 +1425,23 @@ void draw_controlpanel_widget(Ez_event *ev, uint8_t * scale_factor, widget_posit
         ev->win,
         position->x + *scale_factor * 56 ,
         position->y + *scale_factor * 21,
-        position->x + *scale_factor * 96,
+        position->x + *scale_factor * 98,
         position->y + *scale_factor * 37 );
     ez_draw_text (ev->win, EZ_TL, position->x + *scale_factor * 60, position->y +23 , "MANUAL");
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
+
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if (p_ctx->sensors->temperature > (float)p_ctx->cfg->high_temp_limit ) ez_set_color (RED);
+    ez_draw_rectangle (
+        ev->win,
+        position->x + *scale_factor * 108 ,
+        position->y + *scale_factor * 21,
+        position->x + *scale_factor * 155,
+        position->y + *scale_factor * 37 );
+    ez_draw_text (ev->win, EZ_TL, position->x + *scale_factor * 112, position->y +23 , "OVERHAT");
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+
+
 
     /* btn*/
     btn_play_position.x    = position->x + *scale_factor * 10 ;

@@ -31,8 +31,8 @@
 
 
 /* DEFAULT WINDOWS SIZE */
-#define DEFAULT_WINDOW_WIDTH  640
-#define DEFAULT_WINDOW_HEIGHT 480
+#define DEFAULT_WINDOW_WIDTH  1024
+#define DEFAULT_WINDOW_HEIGHT 600
 
 /* GUI PARAMETERS */
 #define REFRESH_INTERVAL      10   /* 10ms 100Hz */
@@ -75,15 +75,15 @@ void draw_pressure_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_
 void draw_humidity_widget(Ez_event *ev, uint8_t * scale_factor, widget_position_t * position, uint8_t size, char * data ) ;
 
 /* GUI PROTO : CONTROL PANEL WIDGET */
-void draw_btn_widget            (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
-void draw_play_btn_widget       (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
-void draw_pause_btn_widget      (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
-void draw_stop_btn_widget       (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
-void draw_light_btn_widget      (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
-void draw_water_btn_widget      (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
-void draw_fan_btn_widget        (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
-void draw_heat_btn_widget       (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
-void draw_controlpanel_widget   (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
+void draw_btn_widget          (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position, uint8_t height, uint8_t width) ;
+void draw_play_btn_widget     (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
+void draw_pause_btn_widget    (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
+void draw_stop_btn_widget     (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
+void draw_light_btn_widget    (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
+void draw_water_btn_widget    (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
+void draw_fan_btn_widget      (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
+void draw_heat_btn_widget     (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
+void draw_controlpanel_widget (Ez_event *ev, uint8_t * scale_factor, widget_position_t * position ) ;
 
 /* GUI GENERAL FCTS */
 void win_on_button_press     (Ez_event *ev); /* Mouse button pressed      */
@@ -97,7 +97,7 @@ void win_on_configure_notify (Ez_event *ev); /* Window size changed       */
 void win_on_window_close     (Ez_event *ev); /* Close button pressed      */
 void win_on_event            (Ez_event *ev);
 
-uint8_t  click_match            (Ez_event *ev, click_zone_t * zone) ;
+uint8_t  click_match         (Ez_event *ev, click_zone_t * zone) ;
 
 /* GUI DEBUG */
 void debug_draw_click_zone(Ez_event *ev, uint8_t * scale_factor ) ;
