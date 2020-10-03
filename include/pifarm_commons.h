@@ -34,6 +34,13 @@ enum { TYPE_UINT8, TYPE_UINT16, TYPE_UINT32, TYPE_STRING };
 
 /* CONST -------------------------------------------------------------------- */
 #define RELAY_NB 16                 /* Using a 16 relays board */
+typedef struct
+{
+    uint8_t  *buf;
+    size_t   bufsize;
+    uint32_t head;
+    uint32_t used;
+} rolling_buffer_t;
 
 typedef struct
 {
@@ -59,6 +66,14 @@ typedef struct
     click_zone_t * cz_btn_fan   ;
     click_zone_t * cz_btn_water ;
     click_zone_t * cz_btn_heat  ;
+    click_zone_t * cz_btn_tab_1 ;
+    click_zone_t * cz_btn_tab_2 ;
+    click_zone_t * cz_btn_tab_3 ;
+    click_zone_t * cz_btn_tab_4 ;
+    uint8_t tab_1 ;
+    uint8_t tab_2 ;
+    uint8_t tab_3 ;
+    uint8_t tab_4 ;
 } gfx_context_t ;
 
 /* Config file data structure */

@@ -11,7 +11,7 @@ INC_DIR=./include
 SRC_DIR=./src
 DEP_DIR=./cots
 
-SRC_LST=pifarm_debug.c pifarm_gpio.c pifarm_sensors.c pifarm_logic.c pifarm_recordings.c pifarm_gui_widgets.c pifarm_gui.c pifarm_configfile.c pifarm_main.c
+SRC_LST=pifarm_debug.c pifarm_tools.c pifarm_gpio.c pifarm_sensors.c pifarm_logic.c pifarm_recordings.c pifarm_gui_widgets.c pifarm_gui.c pifarm_configfile.c pifarm_main.c
 
 LDFLAGS=-lX11 -lXext -lm -lrt -lwiringPi -lbcm2835 -L/usr/local/lib
 

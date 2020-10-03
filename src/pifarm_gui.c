@@ -29,15 +29,16 @@ void debug_draw_click_zone(Ez_event *ev, uint8_t * scale_factor )
     DEBUG_ASSERT( scale_factor == NULL );
 
     uint8_t i ;
-    click_zone_t *t[7] = { p_ctx->gc->cz_btn_play, p_ctx->gc->cz_btn_pause, \
+    click_zone_t *t[11] = { p_ctx->gc->cz_btn_play, p_ctx->gc->cz_btn_pause, \
         p_ctx->gc->cz_btn_stop, p_ctx->gc->cz_btn_light, p_ctx->gc->cz_btn_fan, \
-        p_ctx->gc->cz_btn_heat, p_ctx->gc->cz_btn_water  } ;
+        p_ctx->gc->cz_btn_heat, p_ctx->gc->cz_btn_water, p_ctx->gc->cz_btn_tab_1,\
+        p_ctx->gc->cz_btn_tab_2, p_ctx->gc->cz_btn_tab_3, p_ctx->gc->cz_btn_tab_4  } ;
 
     ez_set_color (RED) ;
     ez_draw_text (ev->win, EZ_TL, DEFAULT_WINDOW_WIDTH -120 , DEFAULT_WINDOW_HEIGHT -20, "debug click zone ON" );
     if ( REFRESH_1HZ > 50 )
     {
-        for (i=0; i<7; i++)
+        for (i=0; i<11; i++)
         {
             ez_set_thick(2) ;
             ez_draw_rectangle (
@@ -179,6 +180,12 @@ void win_on_button_press(Ez_event *ev)                /* Mouse button pressed */
             DEBUG_PRINT("DBG [LOGIC EVENT]   - Heater toggle request done, p_ctx->actuators->heat_status %d", p_ctx->actuators->fan_status);
 #endif
         }
+
+        if ( 0 == click_match(ev, p_ctx->gc->cz_btn_tab_1 ) ) {p_ctx->gc->tab_1 = ON; p_ctx->gc->tab_2 = OFF; p_ctx->gc->tab_3 = OFF; p_ctx->gc->tab_4 = OFF;}
+        if ( 0 == click_match(ev, p_ctx->gc->cz_btn_tab_2 ) ) {p_ctx->gc->tab_2 = ON; p_ctx->gc->tab_1 = OFF; p_ctx->gc->tab_3 = OFF; p_ctx->gc->tab_4 = OFF;}
+        if ( 0 == click_match(ev, p_ctx->gc->cz_btn_tab_3 ) ) {p_ctx->gc->tab_3 = ON; p_ctx->gc->tab_1 = OFF; p_ctx->gc->tab_2 = OFF; p_ctx->gc->tab_4 = OFF;}
+        if ( 0 == click_match(ev, p_ctx->gc->cz_btn_tab_4 ) ) {p_ctx->gc->tab_4 = ON; p_ctx->gc->tab_1 = OFF; p_ctx->gc->tab_2 = OFF; p_ctx->gc->tab_3 = OFF;}
+
     }
 }
 
@@ -299,6 +306,7 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
     static widget_position_t    controlpanel_position;
     static widget_position_t    relay_position ;
     static widget_position_t    graphs_position ;
+    static widget_position_t    toolchest_position ;
 
 #ifdef DBG_GUI_EVENTS
     DEBUG_PRINT ("DBG [GUI EVENTS]    - Expose          win = 0x%x", ez_window_get_id(ev->win));
@@ -307,6 +315,8 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
     scale_factor = 1 ;
 
     /* SET BACKGROUND */
+
+#ifndef DBG_GUI_CLICK_ZONES
     ez_set_color (DEFAULT_BACKGROUND_COLOR);
     ez_fill_rectangle (
         ev->win,
@@ -314,7 +324,7 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
         0 ,
         DEFAULT_WINDOW_WIDTH ,
         DEFAULT_WINDOW_HEIGHT);
-
+#endif
     /* CLOCK WIDGET */
 
     clock_position.x   = 10 ;
@@ -387,30 +397,33 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
         ) ;
 
     /* CONTOL PANEL WIDGET */
-
     controlpanel_position.x = 305 ;
     controlpanel_position.y = 10 ;
 
     draw_controlpanel_widget(ev, &scale_factor, &controlpanel_position) ;
 
-    /* RELAY WIDGET */
-    relay_position.x   = 10 ;
-    relay_position.y   = 220 ;
+    /* TOOLCHEST WIDGET */
+    toolchest_position.x   = 10 ;
+    toolchest_position.y   = 220 ;
 
-    draw_relays_widget(
+    draw_toolchest_widget(
         ev,
-        &relay_position ) ;
+        &toolchest_position ) ;
 
     /* GRAPHS WIDGET */
-    /*
-    graphs_position.x = 10 ;
-    graphs_position.y = 10 ;
+    graphs_position.x = 120 ;
+    graphs_position.y = 220;
 
     draw_graphs_widget(ev, &graphs_position) ;
 
+    /* RELAY WIDGET */
+    relay_position.x   = 120 ;
+    relay_position.y   = 220 ;
+
+    draw_relays_widget(ev, &relay_position ) ;
+
     free(p_segment_data) ;
     p_segment_data = NULL ;
-*/
 
 #ifdef DBG_GUI_CLICK_ZONES
     debug_draw_click_zone(ev, &scale_factor) ;

@@ -56,14 +56,21 @@
 #define CZ_WATER      "water",  400, 140, 455, 195
 #define CZ_FAN        "fan  ",  475, 140, 530, 195
 #define CZ_HEAT       "heat ",  550, 140, 605, 195
+#define CZ_T1         "tab 1",  25,  245, 105, 285
+#define CZ_T2         "tab 2",  25,  300, 105, 340
+#define CZ_T3         "tab 3",  25,  355, 105, 395
+#define CZ_T4         "tab 4",  25,  415, 105, 455
+
+/* GUI : TOOLCHEST WIDGET */
+void draw_toolchest_widget(Ez_event *ev, widget_position_t * position) ;
 
 /* GUI : GRAPHS WIDGET */
 void draw_graphs_widget(Ez_event *ev, widget_position_t * position ) ;
 
-/*  GUI : RELAYS STATUS WIDGET */
+/* GUI : RELAYS STATUS WIDGET */
 void draw_relays_widget(Ez_event *ev, widget_position_t * position ) ;
 
-/*  GUI : 7 SEG DISPLAY ( T P H A ) */
+/* GUI : 7 SEG DISPLAY ( T P H A ) */
 void reverse(char* str, uint8_t len);
 uint16_t intToStr(uint16_t x, char str[], uint8_t d);
 void float_to_string(float n, char* res, uint8_t afterpoint);

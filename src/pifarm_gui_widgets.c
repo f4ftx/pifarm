@@ -17,39 +17,169 @@
 */
 
 #include "pifarm_gui.h"
+#include "pifarm_tools.h"
+
 
 extern context_t     *      p_ctx ;
 extern uint8_t              REFRESH_1HZ  ;
 extern uint8_t              REFRESH_10HZ ;
+
+void draw_toolchest_widget(Ez_event *ev, widget_position_t * position)
+{
+    uint8_t scale_factor = 1 ;
+    widget_position_t btn_graph_pos ;
+    widget_position_t btn_relays_pos ;
+    widget_position_t btn_infos_pos ;
+    widget_position_t btn_debug_pos ;
+
+    /* widget background */
+    ez_set_color (DEFAULT_BACKGROUND_COLOR);
+    ez_fill_rectangle (
+        ev->win,
+        position->x ,
+        position->y ,
+        position->x + 110,
+        position->y + 255 );
+
+    /* main frame */
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    ez_draw_rectangle (
+        ev->win,
+        position->x + 5 ,
+        position->y + 5,
+        position->x + 105,
+        position->y + 250 );
+
+    /* desc */
+    ez_set_color (DEFAULT_BACKGROUND_COLOR);
+    ez_fill_rectangle( ev->win, position->x + 10, position->y, position->x + 75, position->y + 24 ) ;
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    ez_draw_text (ev->win, EZ_TL, position->x + 15, position->y , "Toolchest");
+
+    btn_graph_pos.x = position->x + 10 ;
+    btn_graph_pos.y = position->y + 20 ;
+    draw_btn_widget(ev, &scale_factor, &btn_graph_pos, 50, 90) ;
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if ( p_ctx->gc->tab_1 == ON ) ez_set_color(GREEN);
+    ez_draw_text (ev->win, EZ_TL, position->x + 25, position->y + 40, "GRAPHICS");
+
+    btn_relays_pos.x = position->x + 10 ;
+    btn_relays_pos.y = position->y + 75 ;
+    draw_btn_widget(ev, &scale_factor, &btn_relays_pos, 50, 90) ;
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if ( p_ctx->gc->tab_2 == ON ) ez_set_color(GREEN);
+    ez_draw_text (ev->win, EZ_TL, position->x + 25, position->y + 95, "ACTUATORS");
+
+    btn_infos_pos.x = position->x + 10 ;
+    btn_infos_pos.y = position->y + 130 ;
+    draw_btn_widget(ev, &scale_factor, &btn_infos_pos, 50, 90) ;
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if ( p_ctx->gc->tab_3 == ON ) ez_set_color(GREEN);
+    ez_draw_text (ev->win, EZ_TL, position->x + 25, position->y + 150, "CONFIG");
+
+    btn_debug_pos.x = position->x + 10 ;
+    btn_debug_pos.y = position->y + 190 ;
+    draw_btn_widget(ev, &scale_factor, &btn_debug_pos, 50, 90) ;
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    if ( p_ctx->gc->tab_4 == ON ) ez_set_color(GREEN);
+    ez_draw_text (ev->win, EZ_TL, position->x + 25, position->y + 210, "?");
+}
 
 void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
 {
     DEBUG_ASSERT( ev == NULL );
     DEBUG_ASSERT( position == NULL );
 
-    static int cmp = 0 ;
-    static int buffer[460] = {} ;
-    uint16_t i ;
+    static rolling_buffer_t cache_rb ;
+    static uint16_t         cmp       = 0 ;
+    static uint8_t          init      = 0 ;
 
-    if ( REFRESH_1HZ < 50 )
+    static recording_t      data[500] = {};
+    recording_t             sample[1] = {} ;
+    register uint16_t       iter ;
+    struct tm               now_tm  ;
+    struct timeval          time_now    ;
+
+    if ( init == 0 )
     {
-        buffer[cmp] = p_ctx->sensors->humidity ;
-        cmp +=1 ;
+        rolling_buffer_create (&cache_rb, 500 * sizeof(recording_t));
+        init = 1 ;
+    }
+
+    if ( REFRESH_1HZ == 50 )
+    {
+        gettimeofday(&time_now, NULL);
+        now_tm = *localtime(&time_now.tv_sec);
+
+        sample[0].timestamp    = now_tm ;
+        sample[0].mode         = p_ctx->mode ;
+        sample[0].temperature  = p_ctx->sensors->temperature;
+        sample[0].pressure     = p_ctx->sensors->pressure;
+        sample[0].humidity     = p_ctx->sensors->humidity;
+        sample[0].altitude     = p_ctx->sensors->altitude;
+        sample[0].light_status = p_ctx->actuators->light_status ;
+        sample[0].water_status = p_ctx->actuators->water_status ;
+        sample[0].fan_status   = p_ctx->actuators->fan_status ;
+        sample[0].heat_status  = p_ctx->actuators->heat_status ;
+
+        rolling_buffer_pushback (&cache_rb, &sample[0], sizeof(recording_t));
+        if (cmp >= 500)
+        {
+            rolling_buffer_popfront (&cache_rb, &sample[0], sizeof(recording_t));
+        }
+        else
+        {
+            cmp +=1 ;
+        }
+    }
+
+    if ( p_ctx->gc->tab_1 == OFF ) return;
+
+    rolling_buffer_read (&cache_rb, &data, 500 * sizeof(recording_t));
+
+
+    ez_set_color (RED);
+    for(iter=0; iter<500; iter++)
+    {
+        if (((uint8_t)data[iter].temperature != 0 ) && (iter != 0))
+        {
+            ez_draw_line(
+                ev->win,
+                position->x + 10 + iter - 1,
+                350 - 2 * data[iter-1].temperature,
+                position->x + 10 + iter,
+                350 - 2 * data[iter].temperature);
+        }
+    }
+
+    for(iter=0; iter<500; iter++)
+    {
+        ez_set_color (DEFAULT_FOREGROUND_COLOR);
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 350 - 2 * 30 ) ;
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 350 - 2 * 15 ) ;
     }
 
     ez_set_color (BLUE);
-    for(i=0; i<=cmp; i++)
+    for(iter=0; iter<500; iter++)
     {
-        if (buffer[i] != 0 )
+        if (((uint8_t)data[iter].humidity != 0 ) && (iter != 0))
         {
-        ez_draw_line (
-            ev->win,
-            position->x + 10 + i,
-            position->y + 470,
-            position->x + 10 + i ,
-            position->y + (470 - buffer[i]));
+            ez_draw_line(
+                ev->win,
+                position->x + 10 + iter,
+                470 -  (uint8_t)data[iter - 1].humidity,
+                position->x + 10 + iter,
+                470 -  (uint8_t)data[iter].humidity ) ;
         }
     }
+
+    for(iter=0; iter<500; iter++)
+    {
+        ez_set_color (DEFAULT_FOREGROUND_COLOR);
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 470 - 40 ) ;
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 470 - 60 ) ;
+    }
+
     ez_set_color (DEFAULT_BACKGROUND_COLOR);
 
 }
@@ -58,6 +188,8 @@ void draw_relays_widget(Ez_event *ev, widget_position_t * position )
 {
     DEBUG_ASSERT( ev == NULL );
     DEBUG_ASSERT( position == NULL );
+
+    if ( p_ctx->gc->tab_2 == OFF ) return;
 
     int relay, x, y ;
     char str[10] ;
@@ -68,8 +200,8 @@ void draw_relays_widget(Ez_event *ev, widget_position_t * position )
         ev->win,
         position->x ,
         position->y ,
-        position->x + 615,
-        position->y + 120 );
+        position->x + 505,
+        position->y + 255 );
 
     /* main frame */
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
@@ -77,8 +209,8 @@ void draw_relays_widget(Ez_event *ev, widget_position_t * position )
         ev->win,
         position->x + 5 ,
         position->y + 5,
-        position->x + 610,
-        position->y + 115 );
+        position->x + 500,
+        position->y + 250 );
 
     /* desc */
     ez_set_color (DEFAULT_BACKGROUND_COLOR);
@@ -88,23 +220,23 @@ void draw_relays_widget(Ez_event *ev, widget_position_t * position )
 
 
     x = position->x + 12 ;
-    y = position->y + 15 ;
+    y = position->y + 20 ;
     for (relay=0 ; relay <16 ; relay ++)
     {
         if ( relay < 8 )
         {
-            if (relay != 0) x += 75 ;
-            y = position->y + 64;
+            if (relay != 0) x += 60 ;
+            y = position->y + 149;
         }
 
         if ( relay > 8 )
         {
-            x -= 75 ;
+            x -= 60 ;
         }
 
         if ( relay >= 8 )
         {
-            y = position->y + 15 ;
+            y = position->y + 25 ;
         }
 
         ez_set_color (DEFAULT_BACKGROUND_COLOR);
@@ -114,7 +246,7 @@ void draw_relays_widget(Ez_event *ev, widget_position_t * position )
             ev->win,
             x ,
             y ,
-            x + 64,
+            x + 54,
             y + 44 );
 
         if ( strcmp (p_ctx->cfg->relay_usage[relay], "UNUSED"      ) == 0 )
@@ -130,24 +262,24 @@ void draw_relays_widget(Ez_event *ev, widget_position_t * position )
             ev->win,
             x + 2 ,
             y + 2 ,
-            x + 62,
-            y + 42 );
+            x + 52,
+            y + 82 );
 
         /* STR : V */
-        sprintf(str, "%3d V", p_ctx->cfg->relay_voltage[relay] ) ;
-        ez_draw_text (ev->win, EZ_TL, x + 30, y + 4, str);
+        sprintf(str, "%3dV", p_ctx->cfg->relay_voltage[relay] ) ;
+        ez_draw_text (ev->win, EZ_TL, x + 25, y + 4, str);
 
         /* STR : ID */
-        sprintf(str, "RELAY #%02d", relay) ;
-        ez_draw_text (ev->win, EZ_TL, x + 8, y + 16, str);
+        sprintf(str, "R #%02d", relay) ;
+        ez_draw_text (ev->win, EZ_TL, x + 16, y + 32, str);
 
         /* STR : CFG */
-        if      ( strcmp (p_ctx->cfg->relay_usage[relay], "LED_DRIVER"  ) == 0 ) {sprintf(str, "GROW LEDS" ) ;}
+        if      ( strcmp (p_ctx->cfg->relay_usage[relay], "LED_DRIVER"  ) == 0 ) {sprintf(str, "LEDS" ) ;}
         else if ( strcmp (p_ctx->cfg->relay_usage[relay], "FAN_DRIVER"  ) == 0 ) {sprintf(str, "FAN" ) ;}
         else if ( strcmp (p_ctx->cfg->relay_usage[relay], "HEAT_DRIVER" ) == 0 ) {sprintf(str, "HEAT" ) ;}
         else if ( strcmp (p_ctx->cfg->relay_usage[relay], "PUMP_DRIVER" ) == 0 ) {sprintf(str, "PUMP" ) ;}
-        else if ( strcmp (p_ctx->cfg->relay_usage[relay], "UNUSED"      ) == 0 ) {sprintf(str, "---------" ) ;}
-        ez_draw_text (ev->win, EZ_TL, x + 8, y + 28, str);
+        else if ( strcmp (p_ctx->cfg->relay_usage[relay], "UNUSED"      ) == 0 ) {sprintf(str, "----" ) ;}
+        ez_draw_text (ev->win, EZ_TL, x + 16, y + 60, str);
 
         ez_set_color (ez_black);
         ez_draw_rectangle (

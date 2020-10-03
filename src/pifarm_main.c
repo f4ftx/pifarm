@@ -183,22 +183,34 @@ int main(int argc, char **argv)
     p_ctx->sensors->humidity        = 0 ;
     p_ctx->sensors->pressure        = 0 ;
     p_ctx->sensors->altitude        = 0 ;
+    p_ctx->gc->tab_1 = ON ;
+    p_ctx->gc->tab_2 = OFF ;
+    p_ctx->gc->tab_3 = OFF ;
+    p_ctx->gc->tab_4 = OFF ;
 
     /* click zones */
-    click_zone_t cz_btn_play  = { CZ_PLAY } ;
-    click_zone_t cz_btn_pause = { CZ_PAUSE } ;
-    click_zone_t cz_btn_stop  = { CZ_STOP } ;
-    click_zone_t cz_btn_light = { CZ_LIGHT } ;
-    click_zone_t cz_btn_fan   = { CZ_FAN } ;
-    click_zone_t cz_btn_water = { CZ_WATER } ;
-    click_zone_t cz_btn_heat  = { CZ_HEAT } ;
-    p_ctx->gc->cz_btn_play      = &cz_btn_play  ;
-    p_ctx->gc->cz_btn_pause     = &cz_btn_pause ;
-    p_ctx->gc->cz_btn_stop      = &cz_btn_stop  ;
-    p_ctx->gc->cz_btn_light     = &cz_btn_light ;
-    p_ctx->gc->cz_btn_fan       = &cz_btn_fan   ;
-    p_ctx->gc->cz_btn_water     = &cz_btn_water ;
-    p_ctx->gc->cz_btn_heat      = &cz_btn_heat  ;
+    click_zone_t cz_btn_play   = { CZ_PLAY } ;
+    click_zone_t cz_btn_pause  = { CZ_PAUSE } ;
+    click_zone_t cz_btn_stop   = { CZ_STOP } ;
+    click_zone_t cz_btn_light  = { CZ_LIGHT } ;
+    click_zone_t cz_btn_fan    = { CZ_FAN } ;
+    click_zone_t cz_btn_water  = { CZ_WATER } ;
+    click_zone_t cz_btn_heat   = { CZ_HEAT } ;
+    click_zone_t cz_btn_tab_1  = { CZ_T1 } ;
+    click_zone_t cz_btn_tab_2  = { CZ_T2 } ;
+    click_zone_t cz_btn_tab_3  = { CZ_T3 } ;
+    click_zone_t cz_btn_tab_4  = { CZ_T4 } ;
+    p_ctx->gc->cz_btn_play     = &cz_btn_play  ;
+    p_ctx->gc->cz_btn_pause    = &cz_btn_pause ;
+    p_ctx->gc->cz_btn_stop     = &cz_btn_stop  ;
+    p_ctx->gc->cz_btn_light    = &cz_btn_light ;
+    p_ctx->gc->cz_btn_fan      = &cz_btn_fan   ;
+    p_ctx->gc->cz_btn_water    = &cz_btn_water ;
+    p_ctx->gc->cz_btn_heat     = &cz_btn_heat  ;
+    p_ctx->gc->cz_btn_tab_1    = &cz_btn_tab_1 ;
+    p_ctx->gc->cz_btn_tab_2    = &cz_btn_tab_2 ;
+    p_ctx->gc->cz_btn_tab_3    = &cz_btn_tab_3 ;
+    p_ctx->gc->cz_btn_tab_4    = &cz_btn_tab_4 ;
 
     for (relay_id = 0 ; relay_id < RELAY_NB ; relay_id++ )
     {

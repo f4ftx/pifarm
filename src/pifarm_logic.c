@@ -177,44 +177,27 @@ void auto_program(void)
     p_config_watering_tm = (struct tm *) malloc(sizeof(struct tm) ) ;
     DEBUG_ASSERT( p_config_watering_tm == NULL);
 
+    /* keep same timestamp as now */
+    memcpy (p_config_sunrise_tm,  p_now_tm, sizeof (struct tm));//*p_now_tm ;
+    memcpy (p_config_sunset_tm,   p_now_tm, sizeof (struct tm));//*p_now_tm ;
+    memcpy (p_config_watering_tm, p_now_tm, sizeof (struct tm));//*p_now_tm ;
+
+    /* just chang H M */
     strptime(p_ctx->cfg->sunrise_time,  "%H:%M", p_config_sunrise_tm );
     strptime(p_ctx->cfg->sunset_time,   "%H:%M", p_config_sunset_tm  );
     strptime(p_ctx->cfg->watering_time, "%H:%M", p_config_watering_tm);
 
-    /* light */
-    if ((p_now_tm->tm_hour == p_config_sunrise_tm->tm_hour) && (p_now_tm->tm_min == p_config_sunrise_tm->tm_min) && ( p_now_tm->tm_sec >= 0 ))
+    /* match interval */
+    if ((difftime(mktime(p_config_sunrise_tm), mktime(p_now_tm)) <= 0) &&\
+        (difftime(mktime(p_now_tm), mktime(p_config_sunset_tm)) <= 0))
     {
-        command_light(ON) ; /* start condition */
+        if ( p_ctx->actuators->light_status == OFF ) command_light(ON) ;
+    }
+    else
+    {
+        if ( p_ctx->actuators->light_status == ON ) command_light(OFF) ;
     }
 
-    if ((p_now_tm->tm_hour == p_config_sunset_tm->tm_hour ) && (p_now_tm->tm_min == p_config_sunset_tm->tm_min) && ( p_now_tm->tm_sec >= 0 ))
-    {
-        command_light(OFF) ; /* stop condition */
-    }
-
-    if  ((p_now_tm->tm_hour >= p_config_sunrise_tm->tm_hour) && (p_now_tm->tm_hour <= p_config_sunset_tm->tm_hour))
-    {
-        if ((p_now_tm->tm_hour == p_config_sunrise_tm->tm_hour) && (p_now_tm->tm_min > p_config_sunrise_tm->tm_min ))
-        {
-            if (p_ctx->actuators->light_status == OFF) command_light(ON);
-        }
-        else if ((p_now_tm->tm_hour == p_config_sunset_tm->tm_hour) && (p_now_tm->tm_min < p_config_sunset_tm->tm_min ))
-        {
-            if (p_ctx->actuators->light_status == OFF) command_light(ON);
-        }
-        else if ((p_now_tm->tm_hour > p_config_sunrise_tm->tm_hour) && (p_now_tm->tm_min > p_config_sunrise_tm->tm_min) )
-        {
-            if (p_ctx->actuators->light_status == OFF) command_light(ON);
-        }
-        else if ((p_now_tm->tm_hour < p_config_sunset_tm->tm_hour) && (p_now_tm->tm_min < p_config_sunrise_tm->tm_min) )
-        {
-            if (p_ctx->actuators->light_status == OFF) command_light(ON);
-        }
-        else
-        {
-            if (p_ctx->actuators->light_status == ON) command_light(OFF);
-        }
-    }
     /* watering */
     if (p_ctx->actuators->water_status == ON) watering_duration_timeout += 1 ;
     if ((p_ctx->actuators->water_status == OFF) && \
