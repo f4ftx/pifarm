@@ -99,6 +99,8 @@ typedef struct
     char     sunset_time[256]            ;
     char     watering_time[256]          ;
     uint16_t watering_duration           ;
+    uint8_t  wet_limit                   ;
+    uint8_t  dry_limit                   ;
 } config_t ;
 
 /* sensors status */

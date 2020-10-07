@@ -19,10 +19,9 @@
 #include "pifarm_gui.h"
 #include "pifarm_tools.h"
 
-
-extern context_t     *      p_ctx ;
-extern uint8_t              REFRESH_1HZ  ;
-extern uint8_t              REFRESH_10HZ ;
+extern context_t    *p_ctx ;
+extern uint8_t       REFRESH_1HZ  ;
+extern uint8_t       REFRESH_10HZ ;
 
 void draw_toolchest_widget(Ez_event *ev, widget_position_t * position)
 {
@@ -99,11 +98,23 @@ void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
     register uint16_t       iter ;
     struct tm               now_tm  ;
     struct timeval          time_now    ;
+    static char             *msg_dry ;
+    static char             *msg_wet ;
+    static char             *msg_hot ;
+    static char             *msg_cold ;
 
     if ( init == 0 )
     {
         rolling_buffer_create (&cache_rb, 500 * sizeof(recording_t));
         init = 1 ;
+        msg_dry = malloc (10 * sizeof(char)) ;
+        msg_wet = malloc (10 * sizeof(char)) ;
+        msg_hot = malloc (10 * sizeof(char)) ;
+        msg_cold = malloc (10 * sizeof(char)) ;
+        sprintf(msg_wet, "%d%%",  p_ctx->cfg->wet_limit) ;
+        sprintf(msg_dry, "%d%%",  p_ctx->cfg->dry_limit) ;
+        sprintf(msg_hot, "%d\260",  p_ctx->cfg->high_temp_limit) ;
+        sprintf(msg_cold, "%d\260", p_ctx->cfg->low_temp_limit);
     }
 
     if ( REFRESH_1HZ == 50 )
@@ -155,8 +166,10 @@ void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
     for(iter=0; iter<500; iter++)
     {
         ez_set_color (DEFAULT_FOREGROUND_COLOR);
-        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 350 - 2 * 30 ) ;
-        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 350 - 2 * 15 ) ;
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 350 - 2 * p_ctx->cfg->high_temp_limit ) ;
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 350 - 2 * p_ctx->cfg->low_temp_limit ) ;
+        ez_draw_text (ev->win, EZ_TL, position->x + 495, 350 - p_ctx->cfg->wet_limit - 12 , msg_hot);
+        ez_draw_text (ev->win, EZ_TL, position->x + 495, 350 - p_ctx->cfg->dry_limit , msg_cold);
     }
 
     ez_set_color (BLUE);
@@ -176,8 +189,10 @@ void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
     for(iter=0; iter<500; iter++)
     {
         ez_set_color (DEFAULT_FOREGROUND_COLOR);
-        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 470 - 40 ) ;
-        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 470 - 60 ) ;
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 470 - p_ctx->cfg->wet_limit ) ;
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 470 - p_ctx->cfg->dry_limit ) ;
+        ez_draw_text (ev->win, EZ_TL, position->x + 495, 470 - p_ctx->cfg->wet_limit - 12 , msg_wet);
+        ez_draw_text (ev->win, EZ_TL, position->x + 495, 470 - p_ctx->cfg->dry_limit , msg_dry);
     }
 
     ez_set_color (DEFAULT_BACKGROUND_COLOR);

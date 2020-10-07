@@ -33,6 +33,8 @@ static config_syntax_t      syntax[] =
     { "PROGRAM_SUNSET_TIME",            &cfg.sunset_time,        TYPE_STRING },
     { "PROGRAM_WATERING_TIME",          &cfg.watering_time,      TYPE_STRING },
     { "PROGRAM_WATERING_DURATION",      &cfg.watering_duration,  TYPE_UINT16 },
+    { "PROGRAM_WET_LIMIT",              &cfg.wet_limit,          TYPE_UINT8 },
+    { "PROGRAM_DRY_LIMIT",              &cfg.dry_limit,          TYPE_UINT8 },
 
     { "RELAY00.GPIO",                   &cfg.relay_gpio[0],      TYPE_UINT8  },
     { "RELAY01.GPIO",                   &cfg.relay_gpio[1],      TYPE_UINT8  },
