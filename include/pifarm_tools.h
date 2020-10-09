@@ -8,6 +8,7 @@
 
 #include "pifarm_commons.h"
 
+int8_t run_system_command(const char *command) ;
 void   rolling_buffer_create (rolling_buffer_t* rb, size_t bufsz);
 void   rolling_buffer_delete (rolling_buffer_t* rb);
 size_t rolling_buffer_read (rolling_buffer_t* rb, void *data, size_t sz);

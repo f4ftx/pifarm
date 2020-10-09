@@ -21,6 +21,7 @@
 extern context_t     *      p_ctx ;
 extern uint8_t              REFRESH_1HZ  ;
 extern uint8_t              REFRESH_10HZ ;
+extern uint16_t             REFRESH_1MIN ;
 
 
 void debug_draw_click_zone(Ez_event *ev, uint8_t * scale_factor )
@@ -186,6 +187,12 @@ void win_on_button_press(Ez_event *ev)                /* Mouse button pressed */
         if ( 0 == click_match(ev, p_ctx->gc->cz_btn_tab_3 ) ) {p_ctx->gc->tab_3 = ON; p_ctx->gc->tab_1 = OFF; p_ctx->gc->tab_2 = OFF; p_ctx->gc->tab_4 = OFF;}
         if ( 0 == click_match(ev, p_ctx->gc->cz_btn_tab_4 ) ) {p_ctx->gc->tab_4 = ON; p_ctx->gc->tab_1 = OFF; p_ctx->gc->tab_2 = OFF; p_ctx->gc->tab_3 = OFF;}
 
+        /* TODO : finish */
+        if ( 0 == click_match(ev, p_ctx->gc->cz_btn_tab_4 ) )
+        {
+            p_ctx->shutdown_request = ON ;
+        }
+
     }
 }
 
@@ -222,6 +229,7 @@ void win_on_timer_notify(Ez_event *ev)               /* The timer has expired */
 
     REFRESH_1HZ   +=1 ;
     REFRESH_10HZ  +=1 ;
+    REFRESH_1MIN  +=1 ;
 
     if (( REFRESH_1HZ == 100 ) && ( p_ctx->mode == AUTO )) auto_program();
     if ( REFRESH_1HZ == 100 ) record_sample();
@@ -230,8 +238,9 @@ void win_on_timer_notify(Ez_event *ev)               /* The timer has expired */
     if ( REFRESH_1HZ == 100 ) acquire_bme280();
 
     /* INIT CMP IF NEEDED */
-    if ( REFRESH_1HZ == 100 )  REFRESH_1HZ   = 0 ;
-    if ( REFRESH_10HZ == 10 )  REFRESH_10HZ  = 0 ;
+    if ( REFRESH_1HZ == 100   )  REFRESH_1HZ   = 0 ;
+    if ( REFRESH_10HZ == 10   )  REFRESH_10HZ  = 0 ;
+    if ( REFRESH_1MIN == 6000 )  REFRESH_1MIN  = 0 ;
 
 }
 
@@ -269,7 +278,7 @@ void win_on_key_release(Ez_event *ev)                         /* Key released */
 #endif
      switch (ev->key_sym)
      {
-        case XK_q : ez_quit (); break;
+        case XK_q : ez_quit(); break;
         default : break ;
     }
 }
@@ -314,8 +323,12 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
 
     scale_factor = 1 ;
 
-    /* SET BACKGROUND */
+    if (p_ctx->shutdown_request == ON )
+    {
+        ez_quit() ;
+    }
 
+    /* SET BACKGROUND */
 #ifndef DBG_GUI_CLICK_ZONES
     ez_set_color (DEFAULT_BACKGROUND_COLOR);
     ez_fill_rectangle (
@@ -326,7 +339,6 @@ void win_on_expose(Ez_event *ev)                 /* We must redraw everything */
         DEFAULT_WINDOW_HEIGHT);
 #endif
     /* CLOCK WIDGET */
-
     clock_position.x   = 10 ;
     clock_position.y   = 10 ;
 

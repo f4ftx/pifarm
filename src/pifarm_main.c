@@ -30,6 +30,7 @@
 #include "pifarm_commons.h"
 #include "pifarm_gpio.h"
 #include "pifarm_logic.h"
+#include "pifarm_tools.h"
 
 /* DEFAULT PARAMETERS ------------------------------------------------------- */
 
@@ -37,6 +38,7 @@
 /* GLOBALS ------------------------------------------------------------------ */
 uint8_t             REFRESH_1HZ   = 0 ;
 uint8_t             REFRESH_10HZ  = 0 ;
+uint16_t            REFRESH_1MIN  = 0 ;
 context_t           * p_ctx ;
 config_t            cfg ;
 static const char   * user_config_filename = ".pifarmrc" ;
@@ -183,10 +185,11 @@ int main(int argc, char **argv)
     p_ctx->sensors->humidity        = 0 ;
     p_ctx->sensors->pressure        = 0 ;
     p_ctx->sensors->altitude        = 0 ;
-    p_ctx->gc->tab_1 = ON ;
-    p_ctx->gc->tab_2 = OFF ;
-    p_ctx->gc->tab_3 = OFF ;
-    p_ctx->gc->tab_4 = OFF ;
+    p_ctx->gc->tab_1                = ON ;
+    p_ctx->gc->tab_2                = OFF ;
+    p_ctx->gc->tab_3                = OFF ;
+    p_ctx->gc->tab_4                = OFF ;
+    p_ctx->shutdown_request         = OFF ;
 
     /* click zones */
     click_zone_t cz_btn_play   = { CZ_PLAY } ;
@@ -220,7 +223,8 @@ int main(int argc, char **argv)
     /* Init hardware */
     gpio_init();
     setup_gpio_relay_ports();
-    shutdown_all_relays();       /* relays start off */
+    shutdown_all_relays();       /* relays always start off */
+    acquire_bme280();
 
     /* Init GUI */
     if (ez_init() < 0) exit(1);
@@ -232,6 +236,11 @@ int main(int argc, char **argv)
 
     /* Leave relays OFF */
     shutdown_all_relays();
+
+    if ( p_ctx->shutdown_request == ON )
+    {
+        run_system_command("sudo poweroff") ;
+    }
 
     /* Memory clean */
     free(p_gc) ;
@@ -246,6 +255,7 @@ int main(int argc, char **argv)
     p_ctx = NULL ;
     p_home_path   = NULL ;
     p_config_path = NULL ;
+
 
     return 0 ;
 }

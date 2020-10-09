@@ -22,6 +22,7 @@
 extern context_t    *p_ctx ;
 extern uint8_t       REFRESH_1HZ  ;
 extern uint8_t       REFRESH_10HZ ;
+extern uint16_t      REFRESH_1MIN ;
 
 void draw_toolchest_widget(Ez_event *ev, widget_position_t * position)
 {
@@ -29,7 +30,7 @@ void draw_toolchest_widget(Ez_event *ev, widget_position_t * position)
     widget_position_t btn_graph_pos ;
     widget_position_t btn_relays_pos ;
     widget_position_t btn_infos_pos ;
-    widget_position_t btn_debug_pos ;
+    widget_position_t btn_shutdown_pos ;
 
     /* widget background */
     ez_set_color (DEFAULT_BACKGROUND_COLOR);
@@ -76,12 +77,38 @@ void draw_toolchest_widget(Ez_event *ev, widget_position_t * position)
     if ( p_ctx->gc->tab_3 == ON ) ez_set_color(GREEN);
     ez_draw_text (ev->win, EZ_TL, position->x + 25, position->y + 150, "CONFIG");
 
-    btn_debug_pos.x = position->x + 10 ;
-    btn_debug_pos.y = position->y + 190 ;
-    draw_btn_widget(ev, &scale_factor, &btn_debug_pos, 50, 90) ;
+    btn_shutdown_pos.x = position->x + 10 ;
+    btn_shutdown_pos.y = position->y + 190 ;
+    draw_btn_widget(ev, &scale_factor, &btn_shutdown_pos, 50, 90) ;
     ez_set_color (DEFAULT_FOREGROUND_COLOR);
-    if ( p_ctx->gc->tab_4 == ON ) ez_set_color(GREEN);
-    ez_draw_text (ev->win, EZ_TL, position->x + 25, position->y + 210, "?");
+    //if ( p_ctx->gc->tab_4 == ON ) ez_set_color(GREEN);
+    //ez_draw_text (ev->win, EZ_TL, position->x + 25, position->y + 210, "?");
+
+    /* shutdown icon */
+    ez_set_color(RED);
+    ez_set_thick(3);
+    ez_draw_circle(
+        ev->win,
+        position->x + 44,
+        position->y + 204,
+        position->x + 68,
+        position->y + 228 ) ;
+
+    ez_set_color (DEFAULT_BACKGROUND_COLOR);
+    ez_fill_rectangle(
+        ev->win,
+        position->x + 52,
+        position->y + 200,
+        position->x + 60,
+        position->y + 216);
+    ez_set_color(RED);
+    ez_draw_line(
+        ev->win,
+        position->x + 56,
+        position->y + 202,
+        position->x + 56,
+        position->y + 214);
+    ez_set_thick(1);
 }
 
 void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
@@ -117,7 +144,7 @@ void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
         sprintf(msg_cold, "%d\260", p_ctx->cfg->low_temp_limit);
     }
 
-    if ( REFRESH_1HZ == 50 )
+    if (( REFRESH_1MIN == 1500 ) || ( REFRESH_1MIN == 4500 ))
     {
         gettimeofday(&time_now, NULL);
         now_tm = *localtime(&time_now.tv_sec);
@@ -148,7 +175,93 @@ void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
 
     rolling_buffer_read (&cache_rb, &data, 500 * sizeof(recording_t));
 
+    /* LIGHT INDICATOR */
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    ez_draw_text (ev->win, EZ_TL, position->x + 10, 225 , "Lighting");
+    for(iter=0; iter<500; iter++)
+    {
+        if ( iter % 2 ) ez_draw_point(ev->win, position->x + 10 + iter, 240 ) ;
+    }
+    ez_set_color(YELLOW) ;
+    ez_set_thick(4) ;
+    for(iter=0; iter<500; iter++)
+    {
+        if ((data[iter].light_status == ON ) && (iter != 0))
+        {
+            ez_draw_point(
+                ev->win,
+                position->x + 10 + iter,
+                240);
+        }
+    }
+    ez_set_thick(1) ;
 
+    /* WATERING INDICATOR */
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    ez_draw_text (ev->win, EZ_TL, position->x + 10, 245 , "Watering");
+    for(iter=0; iter<500; iter++)
+    {
+        if ( iter % 2 ) ez_draw_point(ev->win, position->x + 10 + iter, 260 ) ;
+    }
+    ez_set_color(BLUE) ;
+    ez_set_thick(4) ;
+    for(iter=0; iter<500; iter++)
+    {
+        if ((data[iter].water_status == ON ) && (iter != 0))
+        {
+            ez_draw_point(
+                ev->win,
+                position->x + 10 + iter,
+                260);
+        }
+    }
+    ez_set_thick(1) ;
+
+    /* COOLING INDICATOR */
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    ez_draw_text (ev->win, EZ_TL, position->x + 10, 265 , "Cooling");
+    for(iter=0; iter<500; iter++)
+    {
+        if ( iter % 2 ) ez_draw_point(ev->win, position->x + 10 + iter, 280 ) ;
+    }
+    ez_set_color(ORANGE) ;
+    ez_set_thick(4) ;
+    for(iter=0; iter<500; iter++)
+    {
+        if ((data[iter].fan_status == ON ) && (iter != 0))
+        {
+            ez_draw_point(
+                ev->win,
+                position->x + 10 + iter,
+                280);
+        }
+    }
+    ez_set_thick(1) ;
+
+    /* HEATER INDICATOR */
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    ez_draw_text (ev->win, EZ_TL, position->x + 10, 285 , "Heater");
+    for(iter=0; iter<500; iter++)
+    {
+        if ( iter % 2 ) ez_draw_point(ev->win, position->x + 10 + iter, 300 ) ;
+    }
+    ez_set_color(RED) ;
+    ez_set_thick(4) ;
+    for(iter=0; iter<500; iter++)
+    {
+        if ((data[iter].heat_status == ON ) && (iter != 0))
+        {
+            ez_draw_point(
+                ev->win,
+                position->x + 10 + iter,
+                300);
+        }
+    }
+    ez_set_thick(1) ;
+
+    /* TEMPERATURE GRAPH */
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    ez_draw_text (ev->win, EZ_TL, position->x + 10, 320 , "Temperature");
     ez_set_color (RED);
     for(iter=0; iter<500; iter++)
     {
@@ -157,21 +270,24 @@ void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
             ez_draw_line(
                 ev->win,
                 position->x + 10 + iter - 1,
-                350 - 2 * data[iter-1].temperature,
+                400 - 2 * data[iter-1].temperature,
                 position->x + 10 + iter,
-                350 - 2 * data[iter].temperature);
+                400 - 2 * data[iter].temperature);
         }
     }
 
     for(iter=0; iter<500; iter++)
     {
         ez_set_color (DEFAULT_FOREGROUND_COLOR);
-        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 350 - 2 * p_ctx->cfg->high_temp_limit ) ;
-        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 350 - 2 * p_ctx->cfg->low_temp_limit ) ;
-        ez_draw_text (ev->win, EZ_TL, position->x + 495, 350 - p_ctx->cfg->wet_limit - 12 , msg_hot);
-        ez_draw_text (ev->win, EZ_TL, position->x + 495, 350 - p_ctx->cfg->dry_limit , msg_cold);
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 400 - 2 * p_ctx->cfg->high_temp_limit ) ;
+        if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 400 - 2 * p_ctx->cfg->low_temp_limit ) ;
     }
+    ez_draw_text (ev->win, EZ_TL, position->x + 495, 400 - p_ctx->cfg->wet_limit - 12 , msg_hot);
+    ez_draw_text (ev->win, EZ_TL, position->x + 495, 400 - p_ctx->cfg->dry_limit , msg_cold);
 
+    /* HUMIDITY GRAPH */
+    ez_set_color (DEFAULT_FOREGROUND_COLOR);
+    ez_draw_text (ev->win, EZ_TL, position->x + 10, 390 , "Humidity");
     ez_set_color (BLUE);
     for(iter=0; iter<500; iter++)
     {
@@ -191,9 +307,9 @@ void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
         ez_set_color (DEFAULT_FOREGROUND_COLOR);
         if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 470 - p_ctx->cfg->wet_limit ) ;
         if ( iter % 4 ) ez_draw_point(ev->win, position->x + 10 + iter, 470 - p_ctx->cfg->dry_limit ) ;
-        ez_draw_text (ev->win, EZ_TL, position->x + 495, 470 - p_ctx->cfg->wet_limit - 12 , msg_wet);
-        ez_draw_text (ev->win, EZ_TL, position->x + 495, 470 - p_ctx->cfg->dry_limit , msg_dry);
     }
+    ez_draw_text (ev->win, EZ_TL, position->x + 495, 470 - p_ctx->cfg->wet_limit - 12 , msg_wet);
+    ez_draw_text (ev->win, EZ_TL, position->x + 495, 470 - p_ctx->cfg->dry_limit , msg_dry);
 
     ez_set_color (DEFAULT_BACKGROUND_COLOR);
 

@@ -1,5 +1,32 @@
 #include "pifarm_tools.h"
 
+int8_t run_system_command(const char *command)
+{
+  FILE      *fp;
+  char      output[1024];
+  int8_t    retcode ;
+
+  /* Open the command for reading. */
+  fp = popen(command, "r");
+  if (fp == NULL) 
+  {
+    printf("Failed to run command\n" );
+    return -1 ;
+  }
+
+  /* Read the output a line at a time - output it. */
+  while (fgets(output, sizeof(output), fp) != NULL)
+  {
+    printf("%s", output);
+  }
+
+  /* close */
+  retcode = pclose(fp);
+  printf("ret code %d\n", WEXITSTATUS(retcode));
+
+  return retcode;
+}
+
 void rolling_buffer_create (rolling_buffer_t *rb, size_t bufsz)
 {
     if (rb == NULL) return;

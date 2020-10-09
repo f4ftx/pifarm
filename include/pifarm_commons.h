@@ -145,6 +145,7 @@ typedef struct
     uint8_t relay_status[RELAY_NB] ; /* Relay[n] enum current relay status  */
     uint8_t mode                   ; /* MANUAL / AUTO / NONE */
     uint8_t running_status         ; /* OFF / ON */
+    uint8_t shutdown_request       ; /* OFF / ON */
 } context_t ;
 
 void display_help(void) ;
