@@ -13,21 +13,51 @@
 #
 
 # GENERAL SETTINGS =============================================================
+
+# Recordings file (absolute path)
 RECORDINGS_FILE=/home/pi/pifarm.dat
 
 # AUTO MODE PARAMETERS =========================================================
+
+# Temperature upper limit, command fans (Celsius)
 PROGRAM_OVERHEAT_TEMPERATURE=30
+
+# Temperature lower limit, command heater (Celsius) 
 PROGRAM_TOO_COLD_TEMPERATEUR=20
-PROGRAM_WIN_TIME_INTERVAL=300
+
+# Win simulation interval (seconds)
+PROGRAM_WIN_TIME_INTERVAL=600
+
+# Win duration (seconds)
 PROGRAM_WIN_TIME_DURATION=60
+
+# Heater duration (seconds)
+PROGRAM_HEATER_DURATION=300
+
+# LED start time (HH:MM)
 PROGRAM_SUNRISE_TIME=06:30
+
+# LED stop time (HH:MM)
 PROGRAM_SUNSET_TIME=22:30
+
+# Watering time (HH:MM)
 PROGRAM_WATERING_TIME=20:00
+
+# Watering duration (seconds)
 PROGRAM_WATERING_DURATION=120
+
+# Humidity upper limit (%)
 PROGRAM_WET_LIMIT=60
+
+# Humidity lower limit (%)
 PROGRAM_DRY_LIMIT=40
 
 # ACTUATORS SETTINGS ===========================================================
+
+# Relay template :
+# RELAYXX.GPIO    -> int GPIO
+# RELAYXX.VOLTAGE -> int voltage
+# RELAYXX.USAGE   -> str [UNUSED/LED_DRIVER/HEAT_DRIVER/PUMP_DRIVER/FAN_DRIVER]
 
 # RELAY ID 00
 RELAY00.GPIO=21
