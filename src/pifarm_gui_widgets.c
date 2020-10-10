@@ -144,7 +144,7 @@ void draw_graphs_widget(Ez_event *ev, widget_position_t * position )
         sprintf(msg_cold, "%d\260", p_ctx->cfg->low_temp_limit);
     }
 
-    if (( REFRESH_1MIN == 1500 ) || ( REFRESH_1MIN == 4500 ))
+    if (( REFRESH_1MIN == 1 ) || ( REFRESH_1MIN == 3001 ))
     {
         gettimeofday(&time_now, NULL);
         now_tm = *localtime(&time_now.tv_sec);
