@@ -20,7 +20,8 @@ CFLAGS=-Wall -Wextra -Wmissing-prototypes -Wno-missing-braces\
 	   -Wcast-align -Wpointer-arith -Wbad-function-cast -Wundef -Wnested-externs\
 	   -Wstrict-overflow=5 -Wstrict-prototypes -Winline -Wcast-qual -Wshadow \
 	   -Wunreachable-code -Wlogical-op -Wfloat-equal -Wstrict-aliasing=2 \
-	   -Wredundant-decls -Wold-style-definition -I$(INC_DIR)
+	   -Wredundant-decls -Wold-style-definition \
+	   -I$(INC_DIR)
 
 OBJ_CC_LIST=$(patsubst %.c,$(OBJ_DIR)/%.o ,$(SRC_LST) )
 OBJ_AS_LIST=$(patsubst %.c,$(OBJ_DIR)/%.S ,$(SRC_LST) )

@@ -41,7 +41,7 @@ void gpio_set_pin(uint8_t * relay_id, uint8_t * pin)
 {
     /* set pin to low */
 #ifdef DBG_ELECTRONIC
-    DEBUG_PRINT ("DBG [ELECTRONIC]    - Setting relay #%02d (GPIO pin #%02d) to LOW",*relay_id, *pin);
+    DEBUG_PRINT ("[ELECTRONIC]    - Setting relay #%02d (GPIO pin #%02d) to LOW",*relay_id, *pin);
 #endif
     bcm2835_gpio_write(*pin, LOW);
     /* register state in context */
@@ -53,7 +53,7 @@ void gpio_clr_pin(uint8_t * relay_id, uint8_t * pin)
 {
     /* set pin to high */
 #ifdef DBG_ELECTRONIC
-    DEBUG_PRINT ("DBG [ELECTRONIC]    - Setting relay #%02d (GPIO pin #%02d) to HIGH",*relay_id, *pin);
+    DEBUG_PRINT ("[ELECTRONIC]    - Setting relay #%02d (GPIO pin #%02d) to HIGH",*relay_id, *pin);
 #endif
     bcm2835_gpio_write(*pin, HIGH);
     /* register state in context */
@@ -68,7 +68,7 @@ void setup_gpio_relay_ports(void)
     for (relay_id = 0 ; relay_id < RELAY_NB ; relay_id++ )
     {
 #ifdef DBG_ELECTRONIC
-    DEBUG_PRINT ("DBG [ELECTRONIC]    - Setting up GPIO pin #%02d as output (relay #%2d)",p_ctx->cfg->relay_gpio[relay_id], relay_id );
+    DEBUG_PRINT ("[ELECTRONIC]    - Setting up GPIO pin #%02d as output (relay #%2d)",p_ctx->cfg->relay_gpio[relay_id], relay_id );
 #endif
         gpio_setup_pin_as_output(&p_ctx->cfg->relay_gpio[relay_id] );
     }

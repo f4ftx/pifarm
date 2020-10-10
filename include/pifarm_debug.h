@@ -33,6 +33,7 @@
 #define DBG_CONFIGFILE_PARSE 1
 //#define DBG_ELECTRONIC       1
 //#define DBG_LOGIC            1
+//#define DBG_LOGIC_PRG        1
 #endif
 
 /* DEBUG MACROS */

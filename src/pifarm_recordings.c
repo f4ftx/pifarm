@@ -51,7 +51,7 @@ void record_sample(void)
     if (fd_record_file == NULL)
     {
         fd_record_file = fopen(p_ctx->cfg->records_file_path, "wb") ;
-        if (fd_record_file == NULL) 
+        if (fd_record_file == NULL)
         {
             perror(p_ctx->cfg->records_file_path) ;
             return ;
