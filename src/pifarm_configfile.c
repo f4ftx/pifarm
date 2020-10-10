@@ -29,6 +29,7 @@ static config_syntax_t      syntax[] =
     { "PROGRAM_TOO_COLD_TEMPERATEUR",   &cfg.low_temp_limit,     TYPE_UINT8  },
     { "PROGRAM_WIN_TIME_INTERVAL",      &cfg.win_interval,       TYPE_UINT16 },
     { "PROGRAM_WIN_TIME_DURATION",      &cfg.win_duration,       TYPE_UINT16 },
+    { "PROGRAM_HEATER_DURATION",        &cfg.heater_duration,    TYPE_UINT16 },
     { "PROGRAM_SUNRISE_TIME",           &cfg.sunrise_time,       TYPE_STRING },
     { "PROGRAM_SUNSET_TIME",            &cfg.sunset_time,        TYPE_STRING },
     { "PROGRAM_WATERING_TIME",          &cfg.watering_time,      TYPE_STRING },

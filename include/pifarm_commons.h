@@ -95,6 +95,7 @@ typedef struct
     uint8_t  low_temp_limit              ; /* °C from cfg */
     uint16_t win_interval                ; /* s */
     uint16_t win_duration                ; /* s */
+    uint16_t heater_duration             ; /* s */
     char     sunrise_time[256]           ;
     char     sunset_time[256]            ;
     char     watering_time[256]          ;

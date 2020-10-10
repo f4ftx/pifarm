@@ -153,11 +153,12 @@ void command_heating(uint8_t status)
 
 void auto_program(void)
 {
-    static uint16_t         win_trigger_timeout         = 0     ;
-    static uint16_t         win_duration_timeout        = 0     ;
-    static uint8_t          win_status                  = OFF   ;
-    static uint16_t         watering_duration_timeout   = 0     ;
-    static uint8_t          watering_task_done_flag     = 0     ;
+    static uint16_t         win_trigger_timeout       = 0     ;
+    static uint16_t         win_duration_timeout      = 0     ;
+    static uint8_t          win_status                = OFF   ;
+    static uint16_t         watering_duration_timeout = 0     ;
+    static uint16_t         heater_duration_timeout   = 0     ;
+    static uint8_t          watering_task_done_flag   = 0     ;
 
     static struct tm *      p_config_sunrise_tm   ;
     static struct tm *      p_config_sunset_tm    ;
@@ -239,13 +240,17 @@ void auto_program(void)
     }
 
     /* Heating */
+    if ( p_ctx->actuators->heat_status == ON ) heater_duration_timeout += 1 ;
     if ( p_ctx->sensors->temperature < (float)p_ctx->cfg->low_temp_limit)
     {
         command_heating(ON) ;
     }
-    else
+
+
+    if (( p_ctx->actuators->heat_status == ON ) && (heater_duration_timeout == p_ctx->cfg->heater_duration) )
     {
         command_heating(OFF) ;
+        heater_duration_timeout = 0 ;
     }
 
     /* Overheat */
