@@ -63,6 +63,7 @@ void record_sample(void)
         {
             perror("Erreur lors de l'ecriture des donnees dans le fichier!!");
             fclose(fd_record_file);
+            return ;
         }
 
     /* close file */

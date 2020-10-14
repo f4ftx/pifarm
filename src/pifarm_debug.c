@@ -24,6 +24,7 @@ void debug_print(char *p_fmt_message, ...)
     va_start(x_args, p_fmt_message);
     vprintf(p_fmt_message, x_args);
     printf("\n");
+    va_end(x_args);
 }
 
 void debug_assert(const char *p_fct_name, const char *p_filename, int line, const char *assertion, int res)
